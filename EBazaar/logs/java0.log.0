@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2010-01-21T09:37:55</date>
+  <millis>1264088275888</millis>
+  <sequence>576</sequence>
+  <logger>middleware.dataaccess</logger>
+  <level>WARNING</level>
+  <class>middleware.dataaccess.SimpleConnectionPool</class>
+  <method>createConnection</method>
+  <thread>11</thread>
+  <message>Unable to create a connection to database with dburl jdbc:mysql:///accountsdb</message>
+</record>
+<record>
+  <date>2010-01-21T09:38:02</date>
+  <millis>1264088282262</millis>
+  <sequence>862</sequence>
+  <logger>application</logger>
+  <level>INFO</level>
+  <class>application.ApplicationCleanup</class>
+  <method>cleanup</method>
+  <thread>11</thread>
+  <message>Disposing of all open windows...</message>
+</record>
+<record>
+  <date>2010-01-21T09:38:02</date>
+  <millis>1264088282340</millis>
+  <sequence>863</sequence>
+  <logger>middleware.dataaccess</logger>
+  <level>INFO</level>
+  <class>middleware.dataaccess.SimpleConnectionPool</class>
+  <method>releaseConnections</method>
+  <thread>11</thread>
+  <message>Releasing all connections</message>
+</record>
+</log>
