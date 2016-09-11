@@ -39,7 +39,7 @@ public class CatalogListWindow extends JInternalFrame implements ParentWindow {
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	
 	private static final String MAIN_LABEL = "Browse Catalog";
 	private final String BROWSE = "Browse";

@@ -48,7 +48,7 @@ public class EbazaarMainFrame extends javax.swing.JFrame implements ParentWindow
 	//ebazaar application title
 	private final String EBAZAAR_APP_NAME = "Ebazaar Online Shopping Application";
 	private final JLabel FOOTER = 
-		new JLabel("Copyright © 2012 MUM. All Rights Reserved. ", JLabel.CENTER);
+		new JLabel("Copyright ï¿½ 2012 MUM. All Rights Reserved. ", JLabel.CENTER);
 	
 	//menu item names
 	private final String LOGIN = "Login";

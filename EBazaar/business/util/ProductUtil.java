@@ -41,6 +41,16 @@ public class ProductUtil {
         return returnValue;
         
     }
+    public static List<String[]> extractProdInfoForCust(List<IProductFromDb> list) {
+    	int size = list.size();
+    	ArrayList retList = new ArrayList();
+    	for(IProductFromDb prod : list) {
+    		retList.add(extractProdInfoForCust(prod));
+    	}
+    	return retList;
+    	
+    }
+    
     //this is used in the Product manager use case
     public static String[] extractProdInfoForManager(IProductFromDb product){
     	//IMPLEMENT

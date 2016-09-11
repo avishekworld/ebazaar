@@ -79,13 +79,13 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	public List<IProductFromDb> getProductList(String catType) throws DatabaseException {
 		List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
 		if(catType.equals(BOOKS)){
-			productList.add(new Product("Gone with the Wind","10-12-2001","20","12.00"));
-			productList.add(new Product("Messiah of Dune","05-10-2001","100","43.00"));
-			productList.add(new Product("Garden of Rama","10-12-1991","30","52.00"));
+			productList.add(new Product(null,"Gone with the Wind","20","12.00","10-12-2001",null,"This is a good book"));
+			productList.add(new Product(null,"Messiah of Dune","100","43.00","05-10-2001",null,"This is a good book"));
+			productList.add(new Product(null,"Garden of Rama","30","52.00","10-12-1991",null,"This is a good book"));
 		}else{
-			productList.add(new Product("Pants","10-12-2001","20","12.00"));
-			productList.add(new Product("T-Shirts","05-10-2001","100","43.00"));
-			productList.add(new Product("Skirts","10-12-1991","30","52.00"));
+			productList.add(new Product(null,"Pants","20","12.00","10-12-2001",null,"This is a good cloth"));
+			productList.add(new Product(null,"T-Shirts","100","43.00","05-10-2001",null,"This is a good cloth"));
+			productList.add(new Product(null,"Skirts","30","52.00","10-12-1991",null,"This is a good cloth"));
 		}
 		return productList;
 	}
@@ -99,8 +99,14 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	}
 	@Override
 	public IProductFromDb getProduct(String prodName) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return new Product("Gone with the Wind","10-12-2001","20","12.00");
+		List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
+		productList.addAll(getProductList(BOOKS));
+		productList.addAll(getProductList(CLOTHES));
+		for(IProductFromDb prod:productList){
+			if(prod.getProductName().equals(prodName))
+				return prod;
+		}
+		return null;
 	}
 	@Override
 	public IProductFromDb getProductFromId(String prodId) throws DatabaseException {

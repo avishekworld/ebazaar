@@ -102,7 +102,16 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 
 	public List<ICartItem> getLiveCartItems() {
         if(liveCart == null || liveCart.getCartItems() == null) {
-            return new LinkedList<ICartItem>();
+        	LinkedList<ICartItem> locaLiveCart = new LinkedList<ICartItem>();
+            try {
+				locaLiveCart.add(new CartItem("Garden of Rama","2","100"));
+				locaLiveCart.add(new CartItem("Pants","1","25"));
+				locaLiveCart.add(new CartItem("T-shirt","4","40"));
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            return locaLiveCart;
         }
         else {
             return liveCart.getCartItems();

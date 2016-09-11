@@ -42,7 +42,7 @@ public class CartItemsWindow extends JInternalFrame implements ParentWindow {
 	JPanel upper, middle, lower;
 	
 	//constants
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 
     private final String GRANDTOTAL = "Total Price: $";
     private final String EDIT_ITEM = "Edit";

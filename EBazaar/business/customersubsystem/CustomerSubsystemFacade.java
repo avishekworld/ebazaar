@@ -58,7 +58,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	void loadCustomerProfile(Integer custId) throws DatabaseException {
 		//IMPLEMENT
-		customerProfile = new CustomerProfile(1,"stub","stub");
+		customerProfile = new CustomerProfile(1,"Avishek","Ahmed");
 	}
 
 	void loadDefaultShipAddress() throws DatabaseException {
@@ -69,7 +69,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	void loadDefaultBillAddress() throws DatabaseException {
 		//IMPLEMENT
-		defaultBillAddress = new Address("stub","stub","stub","stub");
+		defaultBillAddress = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
 
 	}
 

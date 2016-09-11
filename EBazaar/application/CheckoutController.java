@@ -76,20 +76,24 @@ public class CheckoutController implements CleanupControl {
 			 * Get customer subsystem and read customer profile and default
 			 * shipping and billing addresses here
 			 */
+			ICustomerSubsystem cust = (ICustomerSubsystem) SessionContext
+					.getInstance().get(CustomerConstants.CUSTOMER);
+			ICustomerProfile custProfile = cust.getCustomerProfile();
+			IAddress defaultShipAddress = cust.getDefaultShippingAddress();
+			IAddress defaultBillAddress = cust.getDefaultBillingAddress();
 			shippingBillingWindow = new ShippingBillingWindow();
-			/*
-			 * set default shipping and billing address info here
-			 * shippingBillingWindow
-			 * .setShippingAddress(custProfile.getFirstName() +
-			 * " "+custProfile.getLastName(), defaultShipAddress.getStreet1(),
-			 * defaultShipAddress.getCity(), defaultShipAddress.getState(),
-			 * defaultShipAddress.getZip());
-			 * 
-			 * shippingBillingWindow.setBillingAddress(custName.getFirstName() +
-			 * " "+custName.getLastName(), defaultBillAddress.getStreet1(),
-			 * defaultBillAddress.getCity(), defaultBillAddress.getState(),
-			 * defaultBillAddress.getZip());
-			 */
+			
+			 //set default shipping and billing address info here
+			 shippingBillingWindow.setShippingAddress(custProfile.getFirstName() +
+			 " "+custProfile.getLastName(), defaultShipAddress.getStreet1(),
+			 defaultShipAddress.getCity(), defaultShipAddress.getState(),
+			 defaultShipAddress.getZip());
+
+			 shippingBillingWindow.setBillingAddress(custProfile.getFirstName() +
+			 " "+custProfile.getLastName(), defaultBillAddress.getStreet1(),
+			 defaultBillAddress.getCity(), defaultBillAddress.getState(),
+			 defaultBillAddress.getZip());
+			 
 			EbazaarMainFrame.getInstance().getDesktop()
 					.add(shippingBillingWindow);
 			shippingBillingWindow.setVisible(true);

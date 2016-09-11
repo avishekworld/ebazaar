@@ -78,7 +78,7 @@ public class DefaultData {
 	private String[][] cartItemsData = 
     	{{GARDEN_OF_RAMA,"2","50","100"},
     	{PANTS,"1","25","25"},
-    	{TSHIRTS,"4","15","40"}};
+    	{TSHIRTS,"4","10","40"}};
 	//private List cartItemsList = null;
 		
     	

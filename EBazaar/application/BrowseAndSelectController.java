@@ -43,8 +43,12 @@ import application.gui.ProductDetailsWindow;
 import application.gui.ProductListWindow;
 import application.gui.QuantityWindow;
 import application.gui.SelectOrderWindow;
+import application.gui.ShippingBillingWindow;
 
 public class BrowseAndSelectController implements CleanupControl {
+	IProductSubsystem mProductSubsystem = new ProductSubsystemFacade();
+	IShoppingCartSubsystem mShoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
+	
 	private static final Logger LOG = Logger
 			.getLogger("BrowseAndSelectController.class.getName()");
 
@@ -55,6 +59,12 @@ public class BrowseAndSelectController implements CleanupControl {
 		public void actionPerformed(ActionEvent e) {
 			catalogListWindow = new CatalogListWindow();
 			mainFrame.getDesktop().add(catalogListWindow);
+			try{
+				catalogListWindow.updateModel(mProductSubsystem.getCatalogNames());
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+		
 			catalogListWindow.setVisible(true);
 
 		}
@@ -93,6 +103,14 @@ public class BrowseAndSelectController implements CleanupControl {
 				catalogListWindow.setVisible(false);
 				productListWindow  = new ProductListWindow(type);
 				mainFrame.getDesktop().add(productListWindow);
+				List<String[]> productList;
+				try {
+					productList = ProductUtil.extractProductNames(mProductSubsystem.getProductList(type));
+					productListWindow.updateModel(productList);
+				} catch (DatabaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				productListWindow.setVisible(true);
 			}
 			// If arriving here, the value of selectedRow is -1,
@@ -127,11 +145,20 @@ public class BrowseAndSelectController implements CleanupControl {
 		}
 
 		/* Returns, as a String array, the product details based on the type */
-		String[] readProductDetailsData(String type) {
+		String[] readProductDetailsData(String productName) {
 			if (useDefaultData) {
 				DefaultData productData = DefaultData.getInstance();
-				return productData.getProductDetailsData(type);
-			} 
+				return productData.getProductDetailsData(productName);
+			} else{
+				try {
+					IProductFromDb prod = mProductSubsystem.getProduct(productName);
+					String[] prodInfo = ProductUtil.extractProdInfoForCust(prod);
+					return prodInfo;
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+				}
+				
+			}
 			return null;
 		}
 
@@ -193,6 +220,9 @@ public class BrowseAndSelectController implements CleanupControl {
 			cartItemsWindow = new CartItemsWindow();
 			EbazaarMainFrame.getInstance().getDesktop()
 					.add(cartItemsWindow);
+			List<ICartItem> cartList = mShoppingCartSubsystem.getLiveCartItems();
+			List<String[]> cartlistString = ShoppingCartUtil.cartItemsToStringArrays(cartList);
+			cartItemsWindow.updateModel(cartlistString);
 			cartItemsWindow.setVisible(true);
 		}
 	}

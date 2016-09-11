@@ -52,11 +52,11 @@ class DbClassAddress implements IDbClass {
     }
     void readDefaultBillAddress(ICustomerProfile custProfile) throws DatabaseException {
     	//IMPLEMENT 
-    	defaultBillAddress = new Address("stub", "stub", "stub", "stub");
+    	defaultBillAddress = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
     }    
     void readAllAddresses(ICustomerProfile custProfile) throws DatabaseException {
     	//IMPLEMENT
-    	Address a = new Address("stub", "stub", "stub", "stub");
+    	Address a = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
     	addressList = new LinkedList<IAddress>();
     	addressList.add(a);
     }
