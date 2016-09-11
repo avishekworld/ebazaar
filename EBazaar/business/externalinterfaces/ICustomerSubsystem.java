@@ -101,5 +101,5 @@ public interface ICustomerSubsystem {
 
     //NEW
     public void checkCreditCard() throws EBazaarException;
-    
+   
 }

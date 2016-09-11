@@ -50,11 +50,39 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		//need to implement
     	return new Order(1,"","");
     }
-    
-    
-    
- 
 
-        
+
+	@Override
+	public List<IOrder> getOrderHistory() throws DatabaseException {
+		Order order = new Order(1,"11/20/2011","20.20");
+		List<IOrder> list = new ArrayList<IOrder>();
+		OrderItem orderItem = new OrderItem(1, 1, 1, "1", "20.20");
+		List<IOrderItem> orderItems = new ArrayList<IOrderItem>();
+		orderItems.add(orderItem);
+		order.setOrderItems(orderItems);
+		list.add(order);
+		return list;
+	}
+
+
+	@Override
+	public void submitOrder(IShoppingCart shopCart) throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public IOrderItem createOrderItem(Integer prodId, Integer orderId, String quantityReq, String totalPrice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public IOrder createOrder(Integer orderId, String orderDate, String totalPrice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
  
 }

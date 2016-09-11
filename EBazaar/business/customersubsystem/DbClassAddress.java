@@ -88,9 +88,6 @@ class DbClassAddress implements IDbClass {
     Address getDefaultBillAddress() {
         return this.defaultBillAddress;
     }
-	
-   
-    
         
     void setAddress(IAddress addr){
         address = addr;
