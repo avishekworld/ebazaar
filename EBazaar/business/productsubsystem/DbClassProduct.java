@@ -174,7 +174,22 @@ class DbClassProduct implements IDbClass {
 	}
 
 	private void populateProduct(ResultSet rs) throws DatabaseException {
-		product = new Product(1,"","","","",1,"");
+		try {
+			if(rs!=null){
+				rs.first();
+				int id = rs.getInt("productid");
+				int cid = rs.getInt("catalogid");
+				String name = rs.getString("productname");
+				double price = rs.getDouble("priceperunit");
+				int quantity = rs.getInt("totalquantity");
+				String description = rs.getString("description");
+				String date = rs.getString("mfgdate");
+				product = new Product(id, name, quantity+"", price+"", date, cid, description);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			product = new Product(1,"","","","",1,"");
+		}
 	}
 
 	public String getDbUrl() {

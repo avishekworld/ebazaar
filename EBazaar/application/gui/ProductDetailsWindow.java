@@ -16,6 +16,10 @@ import javax.swing.JWindow;
 
 import application.BrowseAndSelectController;
 import application.GuiUtil;
+import business.externalinterfaces.IProductFromDb;
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
+import middleware.DatabaseException;
 
 /**
  * Class Description: This class provides detailed information

@@ -110,8 +110,10 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	}
 	@Override
 	public IProductFromDb getProductFromId(String prodId) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return new Product("Gone with the Wind","10-12-2001","20","12.00");
+		DbClassProduct dbClass =new DbClassProduct();
+		IProductFromDb product = dbClass.readProduct(Integer.parseInt(prodId));
+		return product;
+		//return new Product("Gone with the Wind","10-12-2001","20","12.00");
 	}
 	@Override
 	public void saveNewCatalogName(String name) throws DatabaseException {
