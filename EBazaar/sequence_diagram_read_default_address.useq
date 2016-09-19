@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.10" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="application.LoginControl" project="EBazaar" 
+    file="/EBazaar/application/LoginControl.java" binary="false" label="loginControl" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="1014" width="0" x="0" y="310"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="business.customersubsystem.CustomerSubsystemFacade" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/CustomerSubsystemFacade.java" binary="false" 
+    label="customerSubsystemFacade" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="4">      
+      <position height="972" width="0" x="0" y="331"/>    
+    </execution>    
+    <execution id="21">      
+      <position height="178" width="0" x="0" y="1104"/>    
+    </execution>    
+    <execution id="7">      
+      <position height="73" width="0" x="0" y="373"/>    
+    </execution>    
+    <execution id="9">      
+      <position height="157" width="0" x="0" y="477"/>    
+    </execution>    
+    <execution id="11">      
+      <position height="73" width="0" x="0" y="665"/>    
+    </execution>    
+    <execution id="13">      
+      <position height="73" width="0" x="0" y="769"/>    
+    </execution>    
+    <execution id="19">      
+      <position height="73" width="0" x="0" y="958"/>    
+    </execution>  
+  </object>  
+  <object id="38" language="java" name="business.customersubsystem.DbClassAddress" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/DbClassAddress.java" binary="false" label="dbclass" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="27">      
+      <position height="21" width="0" x="0" y="508"/>    
+    </execution>    
+    <execution id="29">      
+      <position height="21" width="0" x="0" y="550"/>    
+    </execution>    
+    <execution id="31">      
+      <position height="21" width="0" x="0" y="592"/>    
+    </execution>  
+  </object>  
+  <object id="39" language="java" name="business.externalinterfaces.IOrderSubsystem" project="EBazaar" 
+    file="/EBazaar/business/externalinterfaces/IOrderSubsystem.java" binary="false" label="orderSubsystem" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="37">      
+      <position height="21" width="0" x="0" y="989"/>    
+    </execution>  
+  </object>  
+  <object id="40" language="java" name="business.customersubsystem.CreditCard" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/CreditCard.java" binary="false" label="defaultPaymentInfo" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="35">      
+      <position height="21" width="0" x="0" y="800"/>    
+    </execution>  
+  </object>  
+  <object id="41" language="java" name="business.customersubsystem.Address" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/Address.java" binary="false" label="defaultBillAddress" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="33">      
+      <position height="21" width="0" x="0" y="696"/>    
+    </execution>  
+  </object>  
+  <object id="42" language="java" name="business.customersubsystem.CustomerProfile" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/CustomerProfile.java" binary="false" label="customerProfile" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="25">      
+      <position height="21" width="0" x="0" y="404"/>    
+    </execution>  
+  </object>  
+  <object id="43" language="java" name="business.externalinterfaces.IShoppingCartSubsystem" project="EBazaar" 
+    file="/EBazaar/business/externalinterfaces/IShoppingCartSubsystem.java" binary="false" label="shoppingCartSubsystem" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="15">      
+      <position height="21" width="0" x="0" y="853"/>    
+    </execution>    
+    <execution id="17">      
+      <position height="21" width="0" x="0" y="895"/>    
+    </execution>  
+  </object>  
+  <object id="44" language="java" name="business.customersubsystem.DbClassAddress" project="EBazaar" 
+    file="/EBazaar/business/customersubsystem/DbClassAddress.java" binary="false" label="dbClassAddress" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="23">      
+      <position height="126" width="0" x="0" y="1135"/>    
+    </execution>  
+  </object>  
+  <object id="47" language="java" name="middleware.externalinterfaces.IDataAccessSubsystem" project="EBazaar" 
+    file="/EBazaar/middleware/externalinterfaces/IDataAccessSubsystem.java" binary="false" 
+    label="dataAccessSubsystemFacade" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="46">      
+      <position height="84" width="0" x="0" y="1156"/>    
+    </execution>    
+    <execution id="49">      
+      <position height="21" width="0" x="0" y="1198"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="initializeCustomer(java.lang.Integer):void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="loadCustomerProfile(java.lang.Integer):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="8" operation="loadDefaultShipAddress():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="10" operation="loadDefaultBillAddress():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="11"/>  
+  </message>  
+  <message id="12" operation="loadDefaultPaymentInfo():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="14" operation="setCustomerProfile(business.externalinterfaces.ICustomerProfile):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="15"/>  
+  </message>  
+  <message id="16" operation="retrieveSavedCart():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="18" operation="loadOrderData():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="20" operation="loadDefaultShipAddress():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="21"/>  
+  </message>  
+  <message id="22" operation="readDefaultShipAddress(business.externalinterfaces.ICustomerProfile):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="23"/>  
+  </message>  
+  <message id="24" operation="CustomerProfile(java.lang.Integer,java.lang.String,java.lang.String)" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="25"/>  
+  </message>  
+  <message id="26" operation="DbClassAddress()" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="27"/>  
+  </message>  
+  <message id="28" operation="readDefaultShipAddress(business.externalinterfaces.ICustomerProfile):void" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>  
+  <message id="30" operation="getDefaultShipAddress():business.customersubsystem.Address" asynchronous="false">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="31"/>  
+  </message>  
+  <message id="32" operation="Address(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="33"/>  
+  </message>  
+  <message id="34" operation="CreditCard(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="35"/>  
+  </message>  
+  <message id="36" operation="OrderSubsystemFacade(business.externalinterfaces.ICustomerProfile)" asynchronous="false">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="37"/>  
+  </message>  
+  <message id="45" operation="atomicRead(middleware.externalinterfaces.IDbClass):void" asynchronous="false">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="46"/>  
+  </message>  
+  <message id="48" operation="read():void" asynchronous="false">    
+    <end type="SOURCE" refId="46"/>    
+    <end type="TARGET" refId="49"/>  
+  </message>
+</sequence-diagram>

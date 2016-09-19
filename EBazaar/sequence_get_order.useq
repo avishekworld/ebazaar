@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.10" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="business.externalinterfaces.IOrderSubsystem" project="EBazaar" 
+    file="/EBazaar/business/externalinterfaces/IOrderSubsystem.java" binary="false" label="orderSubsystemFacade" 
+    type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="252" width="0" x="0" y="208"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="business.ordersubsystem.DbClassOrder" project="EBazaar" 
+    file="/EBazaar/business/ordersubsystem/DbClassOrder.java" binary="false" label="dbClassOrder" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="4">      
+      <position height="210" width="0" x="0" y="229"/>    
+    </execution>  
+  </object>  
+  <object id="8" language="java" name="middleware.externalinterfaces.IDataAccessSubsystem" project="EBazaar" 
+    file="/EBazaar/middleware/externalinterfaces/IDataAccessSubsystem.java" binary="false" 
+    label="dataAccessSubsystemFacade" type="interface" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="7">      
+      <position height="168" width="0" x="0" y="250"/>    
+    </execution>  
+  </object>  
+  <object id="11" language="java" name="middleware.dataaccess.DbAction" project="EBazaar" 
+    file="/EBazaar/middleware/dataaccess/DbAction.java" binary="false" label="dbAction" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="10">      
+      <position height="126" width="0" x="0" y="271"/>    
+    </execution>  
+  </object>  
+  <object id="14" language="java" name="business.ordersubsystem.DbClassOrder" project="EBazaar" 
+    file="/EBazaar/business/ordersubsystem/DbClassOrder.java" binary="false" label="dbClassOrder1" type="class" 
+    autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="13">      
+      <position height="84" width="0" x="0" y="292"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="0" x="0" y="334"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="getAllOrderIds(business.externalinterfaces.ICustomerProfile):java.util.List&lt;String&gt;" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="read():void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="9" operation="performRead():void" asynchronous="false">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="12" operation="populateEntity(java.sql.ResultSet):void" asynchronous="false">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="13"/>  
+  </message>  
+  <message id="15" operation="populateOrderIds(java.sql.ResultSet):void" asynchronous="false">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>
+</sequence-diagram>

@@ -46,13 +46,17 @@ class DbClassOrder implements IDbClass {
         //implement
     	this.customerProfile=customerProfile;
     	orderIds = new LinkedList<String>();
-    	return orderIds;
-        
+    	/*dataAccessSS.createConnection(this);
+		dataAccessSS.read();*/
+		return orderIds;
         
     }
     public Order getOrderData(String orderId) throws DatabaseException {
     	//implement
+    	this.orderId = orderId;
     	orderData = new Order(1,"","");
+    	/*dataAccessSS.createConnection(this);
+		dataAccessSS.read();*/
     	return orderData;
     }
     
@@ -102,6 +106,7 @@ class DbClassOrder implements IDbClass {
     }
     private void populateOrderData(ResultSet resultSet) throws DatabaseException {
     	//implement
+    	orderData = new Order(1,"","");
     }    
  
     public void populateEntity(ResultSet resultSet) throws DatabaseException {
