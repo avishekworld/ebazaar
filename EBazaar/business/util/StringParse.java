@@ -398,6 +398,7 @@ public class StringParse {
             }
 
             catch(IOException e){
+            	e.printStackTrace();
                 throw new ParseException("Unable to read text file -- unable to complete transaction.");
             }
                

@@ -41,9 +41,9 @@ public class CheckoutController implements CleanupControl {
 	private static final Logger LOG = Logger.getLogger(CheckoutController.class
 			.getPackage().getName());
 	private final String TERMS_MESSAGE_FILE = CustomerConstants.CURR_DIR
-			+ "\\resources\\terms.txt";
+			+ "/resources/terms.txt";
 	private final String GOODBYE_FILE = CustomerConstants.CURR_DIR
-			+ "\\resources\\goodbye.txt";
+			+ "/resources/goodbye.txt";
 
 	String extractGoodbyeMessage() throws ParseException {
 		return StringParse.extractTextFromFile(GOODBYE_FILE);
@@ -202,8 +202,8 @@ public class CheckoutController implements CleanupControl {
 				}
 				IAddress shipAddr = cust.createAddress(s[0], s[1], s[2], s[3]);
 				IAddress billAddr = cust.createAddress(b[0], b[1], b[2], b[3]);
-				// cust.setBillingAddressInCart(billAddr);
-				// cust.setShippingAddressInCart(shipAddr);
+				cust.setBillingAddressInCart(billAddr);
+				cust.setShippingAddressInCart(shipAddr);
 
 				setupPaymentWindow();
 			}
@@ -215,7 +215,7 @@ public class CheckoutController implements CleanupControl {
 			// String[] ccAsArray = CustomerUtil.creditCardToStringArray(cc);
 
 			// fake data implementation
-			String[] ccAsArray = new String[] { "name", "num", "type", "expir" };
+			String[] ccAsArray = new String[] { "avishek", "1234567812345678", "Visa", "01/12/2019" };
 			paymentWindow = new PaymentWindow();
 			paymentWindow.setCredCardFields(ccAsArray[0], ccAsArray[1],
 					ccAsArray[2], ccAsArray[3]);
@@ -283,14 +283,29 @@ public class CheckoutController implements CleanupControl {
 				.getInstance().get(CustomerConstants.CUSTOMER);
 
 		public void actionPerformed(ActionEvent evt) {
-			paymentWindow.setVisible(false);
-
-			// check rules
-			if (false) {
-				// display error message
+			boolean rulesOk = true;
+			
+			String[] creditCardData = paymentWindow.getPaymentFields();
+			ICustomerSubsystem custSystem = (ICustomerSubsystem) SessionContext
+					.getInstance().get(CustomerConstants.CUSTOMER);
+			ICreditCard creditCard = custSystem.createCreditCard(creditCardData[0], creditCardData[1], creditCardData[2], creditCardData[3]);
+			IAddress billingAddress = custSystem.getShoppingCart().getLiveCart().getBillingAddress();
+			
+			try {
+				custSystem.runPaymentRules(billingAddress, creditCard);
+			} catch (RuleException e1) {
+				rulesOk = false;
+				e1.printStackTrace();
+				GuiUtil.showMessageDialog(paymentWindow, e1.getMessage());
+			} catch (EBazaarException e1) {
+				rulesOk = false;
+				e1.printStackTrace();
+				GuiUtil.showMessageDialog(paymentWindow, "An error has occurred that prevents further processing");
 			}
-			// rules passed, proceed
-			else {
+			
+			// check rules
+			if (rulesOk) {
+				paymentWindow.setVisible(false);
 				// create a credit card instance and set in shopping cart
 				termsWindow = new TermsWindow();
 				try {

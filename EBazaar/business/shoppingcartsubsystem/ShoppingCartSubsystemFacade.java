@@ -73,7 +73,7 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	 *
 	 */
     private ShoppingCartSubsystemFacade(){
-        
+    	liveCart = new ShoppingCart(new LinkedList<ICartItem>());
     }
 
 
@@ -101,7 +101,7 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	}
 
 	public List<ICartItem> getLiveCartItems() {
-        if(liveCart == null || liveCart.getCartItems() == null) {
+        if(true || liveCart == null || liveCart.getCartItems() == null) {
         	LinkedList<ICartItem> locaLiveCart = new LinkedList<ICartItem>();
             try {
 				locaLiveCart.add(new CartItem("Garden of Rama","2","100"));

@@ -216,14 +216,36 @@ public class BrowseAndSelectController implements CleanupControl {
         	//
         	//IRules rules = new RulesQuantity(quantity);
         	//rules.runRules();
-			quantityWindow.dispose();
-			cartItemsWindow = new CartItemsWindow();
-			EbazaarMainFrame.getInstance().getDesktop()
-					.add(cartItemsWindow);
-			List<ICartItem> cartList = mShoppingCartSubsystem.getLiveCartItems();
-			List<String[]> cartlistString = ShoppingCartUtil.cartItemsToStringArrays(cartList);
-			cartItemsWindow.updateModel(cartlistString);
-			cartItemsWindow.setVisible(true);
+			boolean rulesOk = true;
+			String quantityAvailable = quantityWindow.getQuantityDesired();
+			Quantity quantity = new Quantity(quantityAvailable);
+			IProductSubsystem prodSystem = new ProductSubsystemFacade();
+			try {
+				prodSystem.readQuantityAvailable("Pants", quantity);
+				LOG.info("Quantity available " + quantity.getQuantityAvailable() + " and requested " + quantity.getQuantityRequested());
+				IRules rules = new RulesQuantity(quantity);
+	        	rules.runRules();
+			} catch (RuleException e) {
+				rulesOk = false;
+				e.printStackTrace();
+				GuiUtil.showMessageDialog(quantityWindow, e.getMessage());
+			} catch (EBazaarException e) {
+				rulesOk = false;
+				e.printStackTrace();
+				GuiUtil.showMessageDialog(quantityWindow, "An error has occurred that prevents further processing");
+			}
+			
+			if(rulesOk){
+				quantityWindow.dispose();
+				cartItemsWindow = new CartItemsWindow();
+				EbazaarMainFrame.getInstance().getDesktop()
+						.add(cartItemsWindow);
+				List<ICartItem> cartList = mShoppingCartSubsystem.getLiveCartItems();
+				List<String[]> cartlistString = ShoppingCartUtil.cartItemsToStringArrays(cartList);
+				cartItemsWindow.updateModel(cartlistString);
+				cartItemsWindow.setVisible(true);
+			}
+		
 		}
 	}
 

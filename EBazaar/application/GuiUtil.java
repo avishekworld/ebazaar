@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable; 
@@ -268,5 +269,9 @@ public class GuiUtil {
     		sb.append(line);
     	}
     	return sb.toString();
+    }
+    
+    public static void showMessageDialog(Component window, String message){
+    	JOptionPane.showMessageDialog(window, message); 
     }
 }
