@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/auxEbazaar.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/creditVerifSystem.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/jess.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/junit.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/mysql-connector-java-5.1.20-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/rulesencoding.jar"/>
-	<classpathentry kind="lib" path="/Users/newcomputer/Documents/Software_Engineering/Setup/jars/externalJars/rulesengine.jar"/>
+	<classpathentry kind="lib" path="lib/auxEbazaar.jar"/>
+	<classpathentry kind="lib" path="lib/creditVerifSystem.jar"/>
+	<classpathentry kind="lib" path="lib/jess.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="lib" path="lib/rulesencoding.jar"/>
+	<classpathentry kind="lib" path="lib/rulesengine.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
