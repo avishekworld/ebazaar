@@ -34,7 +34,7 @@ public class RulesConfigProperties {
 	 * @param propsLoc
 	 */
 	public static void readProps(String loc) {
-		System.out.println(loc);
+		System.out.println("Rules Properties Read " + loc);
 		Properties ret = new Properties();
 		InputStream is = null;
 		try {

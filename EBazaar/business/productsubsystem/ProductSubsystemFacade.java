@@ -29,11 +29,7 @@ import middleware.dataaccess.DataAccessUtil;
 
 public class ProductSubsystemFacade implements IProductSubsystem {
 	final String DEFAULT_PROD_DESCRIPTION="New Product";
-	CatalogTypes types;
-	public static final String BOOKS = "Books";
-    public static final String CLOTHES = "Clothing";
-    private static String[][] catalogTypes = 
-		{{BOOKS},{CLOTHES}};
+	CatalogTypes catagotyType;
 	
     public TwoKeyHashMap<Integer,String,IProductFromDb> getProductTable() throws DatabaseException {
         DbClassProduct dbClass = new DbClassProduct();
@@ -48,7 +44,7 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	public void saveNewProduct(IProductFromGui product, String catalogType) throws DatabaseException {
 		//get catalogid
 		Integer catalogid = getCatalogIdFromType(catalogType); 
-				//invent description
+		//invent description
 		String description = DEFAULT_PROD_DESCRIPTION;
 		DbClassProduct dbclass = new DbClassProduct();
 		dbclass.saveNewProduct(product, catalogid,description);
@@ -62,58 +58,54 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 				
 	}
 	public Integer getCatalogIdFromType(String catType) throws DatabaseException {
-		return 0;
+		DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
+		Integer catalogId = dbClass.getCatalogIdFromType(catType);
+		return catalogId;
+	}
+	@Override
+	public Integer getProductIdFromName(String prodName) throws DatabaseException {
+		DbClassProduct dbClass = new DbClassProduct();
+		Integer catalogId = dbClass.getProductIdFromName(prodName);
+		return catalogId;
+	}
+	@Override
+	public List<String[]> getCatalogNames() throws DatabaseException {
+		DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
+		List<String[]> cataLogName = dbClass.getCatalogNames();
+		return cataLogName; 
 	}
 	
 	@Override
-	public List<String[]> getCatalogNames() throws DatabaseException {
-		return Arrays.asList(catalogTypes); 
-	}
-	@Override
 	public List<String[]> refreshCatalogNames() throws DatabaseException {
-		return getCatalogNames();
+		DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
+		List<String[]> cataLogName = dbClass.refreshCatalogNames();
+		return cataLogName; 
 	}
 	//This is needed by ComboListener in ManageProductsController. When you have implemented this,
 		//you can remove comments from body of ComboListener.
 	@Override
 	public List<IProductFromDb> getProductList(String catType) throws DatabaseException {
-		List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
-		if(catType.equals(BOOKS)){
-			productList.add(new Product(null,"Gone with the Wind","20","12.00","10-12-2001",null,"This is a good book"));
-			productList.add(new Product(null,"Messiah of Dune","100","43.00","05-10-2001",null,"This is a good book"));
-			productList.add(new Product(null,"Garden of Rama","30","52.00","10-12-1991",null,"This is a good book"));
-		}else{
-			productList.add(new Product(null,"Pants","20","12.00","10-12-2001",null,"This is a good cloth"));
-			productList.add(new Product(null,"T-Shirts","100","43.00","05-10-2001",null,"This is a good cloth"));
-			productList.add(new Product(null,"Skirts","30","52.00","10-12-1991",null,"This is a good cloth"));
-		}
+		DbClassProduct dbClass = new DbClassProduct();
+		List<IProductFromDb> productList = dbClass.readProductList(getCatalogIdFromType(catType));
 		return productList;
 	}
 	@Override
 	public List<IProductFromDb> refreshProductList(String catType) throws DatabaseException {
-		return getProductList(catType);
-	}
-	@Override
-	public Integer getProductIdFromName(String prodName) throws DatabaseException {
-		return 0;
+		DbClassProduct dbClass = new DbClassProduct();
+		List<IProductFromDb> productList = dbClass.refreshProductList(Integer.parseInt(catType));
+		return productList;
 	}
 	@Override
 	public IProductFromDb getProduct(String prodName) throws DatabaseException {
-		List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
-		productList.addAll(getProductList(BOOKS));
-		productList.addAll(getProductList(CLOTHES));
-		for(IProductFromDb prod:productList){
-			if(prod.getProductName().equals(prodName))
-				return prod;
-		}
-		return null;
+		DbClassProduct dbClass = new DbClassProduct();
+		IProductFromDb product = dbClass.readProduct(getProductIdFromName(prodName));
+		return product;
 	}
 	@Override
 	public IProductFromDb getProductFromId(String prodId) throws DatabaseException {
 		DbClassProduct dbClass =new DbClassProduct();
 		IProductFromDb product = dbClass.readProduct(Integer.parseInt(prodId));
 		return product;
-		//return new Product("Gone with the Wind","10-12-2001","20","12.00");
 	}
 	@Override
 	public void saveNewCatalogName(String name) throws DatabaseException {

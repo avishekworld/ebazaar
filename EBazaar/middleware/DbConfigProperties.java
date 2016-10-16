@@ -13,9 +13,13 @@ public class DbConfigProperties {
 		System.getProperty("user.dir") + "/" + PROPERTIES;
 	private static Properties props;
 	
-	static {
+	public DbConfigProperties(){
 		readProps();
 	}
+	
+	/*static {
+		readProps();
+	}*/
 	
 	public String getProperty(String key) {
 		System.out.println(props);
@@ -33,7 +37,7 @@ public class DbConfigProperties {
 	 * @param propsLoc
 	 */
 	public static void readProps(String loc) {
-		System.out.println(loc);
+		System.out.println("Db Properties read " + loc);
 		Properties ret = new Properties();
 		InputStream is = null;
 		try {

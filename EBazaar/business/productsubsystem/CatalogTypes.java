@@ -18,6 +18,7 @@ import business.externalinterfaces.ICatalogTypes;
 public class CatalogTypes implements ICatalogTypes {
     HashMap<Integer,String> catalogIdToName = new HashMap<Integer,String>();
     HashMap<String,Integer> catalogNameToId = new HashMap<String,Integer>();
+    
     public List<String[]> getCatalogNames() {
     	List<String[]> retVal = new ArrayList<String[]>();
     	Collection<String> vals = catalogIdToName.values();
@@ -25,9 +26,8 @@ public class CatalogTypes implements ICatalogTypes {
     		retVal.add(new String[]{s});
     	}
     	return retVal;
- 
-        
     }
+    
     public String getCatalogName(Integer id){
         return catalogIdToName.get(id);
     }
