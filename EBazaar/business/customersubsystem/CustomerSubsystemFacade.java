@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.Logger;
 
 import middleware.DatabaseException;
 import middleware.EBazaarException;
@@ -57,8 +58,9 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	}
 
 	void loadCustomerProfile(Integer custId) throws DatabaseException {
-		//IMPLEMENT
-		customerProfile = new CustomerProfile(1,"Avishek","Ahmed");
+		DbClassCustomerProfile dbClass = new DbClassCustomerProfile();
+		customerProfile = dbClass.getCustomerProfile(custId);
+		System.out.println("avishek " + customerProfile.getFirstName());
 	}
 
 	void loadDefaultShipAddress() throws DatabaseException {
