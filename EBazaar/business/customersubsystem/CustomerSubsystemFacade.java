@@ -45,11 +45,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		loadDefaultShipAddress();
 		loadDefaultBillAddress();
 		loadDefaultPaymentInfo();
-		// SessionContext session = SessionContext.getInstance();
-
-		// get the user's saved cart from the database and store in the Customer
-		// --
-		// he may or may not decide to use it
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
 		shoppingCartSubsystem.setCustomerProfile(customerProfile);
 		shoppingCartSubsystem.retrieveSavedCart();
@@ -60,7 +55,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	void loadCustomerProfile(Integer custId) throws DatabaseException {
 		DbClassCustomerProfile dbClass = new DbClassCustomerProfile();
 		customerProfile = dbClass.getCustomerProfile(custId);
-		System.out.println("avishek " + customerProfile.getFirstName());
 	}
 
 	void loadDefaultShipAddress() throws DatabaseException {
@@ -70,16 +64,23 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	}
 
 	void loadDefaultBillAddress() throws DatabaseException {
-		//IMPLEMENT
-		defaultBillAddress = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
-
+		DbClassAddress dbclass = new DbClassAddress();
+		dbclass.readDefaultBillAddress(customerProfile);
+		defaultBillAddress = dbclass.getDefaultBillAddress();
 	}
 
 	void loadDefaultPaymentInfo() throws DatabaseException {
-		//IMPLEMENT
-		defaultPaymentInfo = new CreditCard("","","","");
-
+		DbClassCreditCard dbclass = new DbClassCreditCard();
+		dbclass.readDefaultPayment(customerProfile);
+		defaultPaymentInfo = dbclass.getDefaultPayment();
 	}
+	
+	public List<IAddress> getAllAddresses() throws DatabaseException {
+		DbClassAddress dbClass = new DbClassAddress();
+		dbClass.readAllAddresses(customerProfile);
+		return Collections.unmodifiableList(dbClass.getAddressList());
+	}
+	
 	public void refreshAfterSubmit() throws DatabaseException {
 		loadOrderData();
 	}
@@ -94,8 +95,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 			String zip) {
 		return new Address(street, city, state, zip);
 	}
-
-	// /implementation of interface
 
 	/**
 	 * Return an (unmodifiable) copy of the order history.
@@ -113,17 +112,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	}
 
-	/**
-	 * Return an (unmodifiable) copy of the addresses
-	 */
-	public List<IAddress> getAllAddresses() throws DatabaseException {
-		DbClassAddress dbClass = new DbClassAddress();
-		dbClass.readAllAddresses(customerProfile);
-		return Collections.unmodifiableList(dbClass.getAddressList());
-	}
-
 	public ICustomerProfile getCustomerProfile() {
-
 		return customerProfile;
 	}
 
@@ -175,7 +164,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	// assumes array is in the form street,city,state,zip
 	public IAddress createAddress(String[] addressInfo) {
-
 		return createAddress(addressInfo[0], addressInfo[1], addressInfo[2],
 				addressInfo[3]);
 	}

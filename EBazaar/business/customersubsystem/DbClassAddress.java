@@ -32,6 +32,7 @@ class DbClassAddress implements IDbClass {
     private final String SAVE = "Save";
     private final String READ = "Read";
     private final String READ_DEFAULT_SHIP = "ReadDefaultShip";
+    private final String READ_DEFAULT_BILL = "ReadDefaultBill";
     
 	//column names
     private final String STREET="street";
@@ -51,14 +52,14 @@ class DbClassAddress implements IDbClass {
         dataAccessSS.atomicRead(this);       
     }
     void readDefaultBillAddress(ICustomerProfile custProfile) throws DatabaseException {
-    	//IMPLEMENT 
-    	defaultBillAddress = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
+    	this.custProfile = custProfile;
+        queryType=READ_DEFAULT_BILL;
+        dataAccessSS.atomicRead(this);  
     }    
     void readAllAddresses(ICustomerProfile custProfile) throws DatabaseException {
-    	//IMPLEMENT
-    	Address a = new Address("1000 Nth 4th Street", "Fairlfield", "Iowa", "52557");
-    	addressList = new LinkedList<IAddress>();
-    	addressList.add(a);
+    	this.custProfile = custProfile;
+    	queryType = READ;
+    	dataAccessSS.atomicRead(this); 
     }
     
     public void buildQuery() throws DatabaseException {
@@ -70,28 +71,12 @@ class DbClassAddress implements IDbClass {
         }
         else if(queryType.equals(READ_DEFAULT_SHIP)){
             buildReadDefaultShipQuery();
-        }		
+        }	
+        else if(queryType.equals(READ_DEFAULT_BILL)){
+            buildReadDefaultBillQuery();
+        }
     }
     
-    IAddress getAddress() {
-        return address;
-    }
-    
-    List<IAddress> getAddressList() {
-        return addressList;
-    }
-    
-    Address getDefaultShipAddress(){
-        return this.defaultShipAddress;
-    }
-    
-    Address getDefaultBillAddress() {
-        return this.defaultBillAddress;
-    }
-        
-    void setAddress(IAddress addr){
-        address = addr;
-    }
     void buildReadCustNameQuery() {
         query = "SELECT fname, lname " +
         "FROM Customer " +
@@ -109,7 +94,8 @@ class DbClassAddress implements IDbClass {
         				  address.getZip() + "')";
     }
     void buildReadAllAddressesQuery() {
-        //IMPLEMENT
+    	query = "SELECT * from  AltShipAddress "+
+    	        "WHERE custid = " + custProfile.getCustId();
     }
  
     void buildReadDefaultShipQuery() {
@@ -117,6 +103,33 @@ class DbClassAddress implements IDbClass {
         "FROM Customer "+
         "WHERE custid = " + custProfile.getCustId();
     }
+    
+    void buildReadDefaultBillQuery() {
+        query = "SELECT billaddress1, billaddress2, billcity, billstate, billzipcode "+
+        "FROM Customer "+
+        "WHERE custid = " + custProfile.getCustId();
+    }
+    
+    IAddress getAddress() {
+        return address;
+    }
+    
+    List<IAddress> getAddressList() {
+        return addressList;
+    }
+    
+    Address getDefaultShipAddress(){
+        return defaultShipAddress;
+    }
+    
+    Address getDefaultBillAddress() {
+        return defaultBillAddress;
+    }
+        
+    void setAddress(IAddress addr){
+        address = addr;
+    }
+    
     public String getDbUrl() {
     	DbConfigProperties props = new DbConfigProperties();	
     	return props.getProperty(DbConfigKey.ACCOUNT_DB_URL.getVal());
@@ -125,6 +138,20 @@ class DbClassAddress implements IDbClass {
     public String getQuery() {
         return query;
         
+    }
+    
+    /* Used only when we read from the database
+     */
+    public void populateEntity(ResultSet rs) throws DatabaseException {
+        if(queryType.equals(READ)){
+            populateAddressList(rs);
+        }		        		
+        else if(queryType.equals(READ_DEFAULT_SHIP)){
+            populateDefaultShipAddress(rs);
+        }
+        else if(queryType.equals(READ_DEFAULT_BILL)){
+            populateDefaultBillAddress(rs);
+        }
     }
     
     //implementation provided here, but you still need to implement the sql
@@ -143,6 +170,7 @@ class DbClassAddress implements IDbClass {
                 }                
             }
             catch(SQLException e){
+            	e.printStackTrace();
                 throw new DatabaseException(e);
             }         
         }       
@@ -159,20 +187,26 @@ class DbClassAddress implements IDbClass {
             }          
         }
         catch(SQLException e) {
+        	e.printStackTrace();
             throw new DatabaseException(e);
         }
         
     }
-	
-	
-    /* Used only when we read from the database
-     */
-    public void populateEntity(ResultSet rs) throws DatabaseException {
-        if(queryType.equals(READ)){
-            populateAddressList(rs);
-        }		        		
-        else if(queryType.equals(READ_DEFAULT_SHIP)){
-            populateDefaultShipAddress(rs);
+    
+    void populateDefaultBillAddress(ResultSet rs) throws DatabaseException {
+        try {
+            if(rs.next()){
+                defaultBillAddress = new Address(rs.getString("billaddress1"),
+                                                 rs.getString("billaddress2"),
+                                                 rs.getString("billcity"),
+                                                 rs.getString("billstate"),
+                                                 rs.getString("billzipcode"));
+            }          
         }
+        catch(SQLException e) {
+        	e.printStackTrace();
+            throw new DatabaseException(e);
+        }
+        
     }
 }

@@ -84,7 +84,7 @@ public class DbClassCatalogTypes implements IDbClass {
         
     }
     
-    private void populateCatalogTypes(ResultSet resultSet){
+    private void populateCatalogTypes(ResultSet resultSet) throws DatabaseException{
     	catalogTypes = new CatalogTypes();
     	try {
 			if(resultSet !=null){
@@ -96,10 +96,11 @@ public class DbClassCatalogTypes implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);
 		}
     }
     
-    private void populateCatalogId(ResultSet resultSet){
+    private void populateCatalogId(ResultSet resultSet) throws DatabaseException{
     	try {
 			if(resultSet !=null){
 				resultSet.first();
@@ -107,6 +108,7 @@ public class DbClassCatalogTypes implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);
 		}
     }
 

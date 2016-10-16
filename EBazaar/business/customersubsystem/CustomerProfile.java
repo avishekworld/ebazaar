@@ -6,7 +6,6 @@ class CustomerProfile implements ICustomerProfile{
 	private String firstName;
 	private String lastName;
 	private Integer custId;
-	//CustomerProfile(){}
 	CustomerProfile(Integer custid,String firstName,String lastName){
 		this.custId = custid;
 		this.firstName = firstName;

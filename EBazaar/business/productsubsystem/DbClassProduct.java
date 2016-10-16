@@ -203,6 +203,7 @@ class DbClassProduct implements IDbClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			product = new Product(1,"","","","",1,"");
+			throw new DatabaseException(e);
 		}
 	}
 	
@@ -214,6 +215,7 @@ class DbClassProduct implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DatabaseException(e);
 		}
 	}
 
