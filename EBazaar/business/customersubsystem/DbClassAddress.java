@@ -171,7 +171,7 @@ class DbClassAddress implements IDbClass {
             }
             catch(SQLException e){
             	e.printStackTrace();
-                throw new DatabaseException(e);
+                throw new DatabaseException("Unable to read all addresses");
             }         
         }       
     }
@@ -188,7 +188,7 @@ class DbClassAddress implements IDbClass {
         }
         catch(SQLException e) {
         	e.printStackTrace();
-            throw new DatabaseException(e);
+            throw new DatabaseException("Unable to read default ship address");
         }
         
     }
@@ -205,7 +205,7 @@ class DbClassAddress implements IDbClass {
         }
         catch(SQLException e) {
         	e.printStackTrace();
-            throw new DatabaseException(e);
+            throw new DatabaseException("Unable to read default bill address");
         }
         
     }

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import static business.util.StringParse.*;
 
 import business.*;
+import business.externalinterfaces.IAddress;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICustomerProfile;
 import middleware.DatabaseException;
@@ -33,6 +34,7 @@ public class DbClassShoppingCart implements IDbClass {
     final String GET_ID="GetId";
     final String GET_SAVED_ITEMS="GetSavedItems";
     String queryType;
+    
     public void buildQuery() {
         if(queryType.equals(GET_ID)){
             buildGetIdQuery();
@@ -50,9 +52,7 @@ public class DbClassShoppingCart implements IDbClass {
     }
     
     private void buildGetSavedItemsQuery() {
-    	//IMPLEMENT
-        query = "";
-        
+		query = "select * from shopcartitem where shopcartid =" + cartId;
     }
     
     public Integer getShoppingCartId(ICustomerProfile custProfile) throws DatabaseException {
@@ -62,9 +62,10 @@ public class DbClassShoppingCart implements IDbClass {
         return cartId;
     }
     public List<ICartItem> getSavedCartItems(Integer cartId) throws DatabaseException {
-        //IMPLEMENT
-        return new LinkedList<ICartItem>();
-        
+        this.cartId = cartId;
+        queryType = GET_SAVED_ITEMS;
+        dataAccessSS.atomicRead(this);
+        return cartItemsList;
     }
 
     public void populateEntity(ResultSet resultSet) throws DatabaseException {
@@ -76,22 +77,38 @@ public class DbClassShoppingCart implements IDbClass {
         }
         
     }
-    private void populateShopCartId(ResultSet rs){
+    private void populateShopCartId(ResultSet rs) throws DatabaseException {
         try {
             if(rs.next()){
                 cartId = rs.getInt("shopcartid");
             }
         }
         catch(SQLException e){
-            //do nothing
+        	e.printStackTrace();
+            throw new DatabaseException("Unable to get shoppingcartid");
         }   
     }
     private void populateCartItemsList(ResultSet rs) throws DatabaseException {
-    	//IMPLEMENT
-        ICartItem cartItem = new CartItem("name","1","10");
-               
         cartItemsList= new LinkedList<ICartItem>();
-        cartItemsList.add(cartItem);
+        int count = 1;
+        if(rs != null){
+            try {
+                while(rs.next()) {
+                    int cartId = rs.getInt("cartitemid");
+                    int productId = rs.getInt("productid");
+                    int lineItemId = count;
+                    int quantity = rs.getInt("quantity");
+                    double totalPrice = rs.getDouble("totalprice");
+                    CartItem cartItem = new CartItem(cartId, productId, lineItemId, quantity +"", totalPrice + "", true);
+                    cartItemsList.add(cartItem);
+                    count++;
+                }                
+            }
+            catch(SQLException e){
+            	e.printStackTrace();
+                throw new DatabaseException("Unable to read save cart items");
+            }         
+        } 
           
     }
 

@@ -46,8 +46,9 @@ import application.gui.SelectOrderWindow;
 import application.gui.ShippingBillingWindow;
 
 public class BrowseAndSelectController implements CleanupControl {
-	IProductSubsystem mProductSubsystem = new ProductSubsystemFacade();
-	IShoppingCartSubsystem mShoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
+	IProductSubsystem productSubsystem = new ProductSubsystemFacade();
+	IShoppingCartSubsystem shoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
+	IProductFromDb selectedProduct;
 	
 	private static final Logger LOG = Logger
 			.getLogger("BrowseAndSelectController.class.getName()");
@@ -60,7 +61,7 @@ public class BrowseAndSelectController implements CleanupControl {
 			catalogListWindow = new CatalogListWindow();
 			mainFrame.getDesktop().add(catalogListWindow);
 			try{
-				catalogListWindow.updateModel(mProductSubsystem.getCatalogNames());
+				catalogListWindow.updateModel(productSubsystem.getCatalogNames());
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -82,13 +83,37 @@ public class BrowseAndSelectController implements CleanupControl {
 		}
 	}
 
-	class RetrieveCartActionListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
+	class RetrieveCartActionListener implements ActionListener, Controller {
+		SessionContext context = SessionContext.getInstance();
+		
+		public void doUpdate() {
+			populateScreen();
+		}
+		
+		void populateScreen() {
 			if(cartItemsWindow == null){
                 cartItemsWindow = new  CartItemsWindow();
             }
 			EbazaarMainFrame.getInstance().getDesktop().add(cartItemsWindow);
+			shoppingCartSubsystem.makeSavedCartLive();
+			List<ICartItem> cartItems = shoppingCartSubsystem.getLiveCartItems();
+			List<String[]> cartItemList = ShoppingCartUtil.makeDisplayableList(cartItems);
+			cartItemsWindow.updateModel(cartItemList);
 			cartItemsWindow.setVisible(true);
+		}
+		public void actionPerformed(ActionEvent e) {
+			boolean loggedIn = (Boolean) context
+					.get(CustomerConstants.LOGGED_IN);
+			if (!loggedIn) {
+				cartItemsWindow = new  CartItemsWindow();
+				LoginControl loginControl = new LoginControl(
+						cartItemsWindow, EbazaarMainFrame.getInstance(), this);
+
+				loginControl.startLogin();
+			} else {
+				populateScreen();
+
+			}
 		}
 	}
 
@@ -105,7 +130,7 @@ public class BrowseAndSelectController implements CleanupControl {
 				mainFrame.getDesktop().add(productListWindow);
 				List<String[]> productList;
 				try {
-					productList = ProductUtil.extractProductNames(mProductSubsystem.getProductList(type));
+					productList = ProductUtil.extractProductNames(productSubsystem.getProductList(type));
 					productListWindow.updateModel(productList);
 				} catch (DatabaseException e) {
 					// TODO Auto-generated catch block
@@ -151,8 +176,8 @@ public class BrowseAndSelectController implements CleanupControl {
 				return productData.getProductDetailsData(productName);
 			} else{
 				try {
-					IProductFromDb prod = mProductSubsystem.getProduct(productName);
-					String[] prodInfo = ProductUtil.extractProdInfoForCust(prod);
+					selectedProduct = productSubsystem.getProduct(productName);
+					String[] prodInfo = ProductUtil.extractProdInfoForCust(selectedProduct);
 					return prodInfo;
 				} catch (DatabaseException e) {
 					e.printStackTrace();
@@ -217,11 +242,11 @@ public class BrowseAndSelectController implements CleanupControl {
         	//IRules rules = new RulesQuantity(quantity);
         	//rules.runRules();
 			boolean rulesOk = true;
-			String quantityAvailable = quantityWindow.getQuantityDesired();
-			Quantity quantity = new Quantity(quantityAvailable);
+			String quantityDesired = quantityWindow.getQuantityDesired();
+			Quantity quantity = new Quantity(quantityDesired);
 			IProductSubsystem prodSystem = new ProductSubsystemFacade();
 			try {
-				prodSystem.readQuantityAvailable("Pants", quantity);
+				prodSystem.readQuantityAvailable(selectedProduct.getProductName(), quantity);
 				LOG.info("Quantity available " + quantity.getQuantityAvailable() + " and requested " + quantity.getQuantityRequested());
 				IRules rules = new RulesQuantity(quantity);
 	        	rules.runRules();
@@ -240,7 +265,14 @@ public class BrowseAndSelectController implements CleanupControl {
 				cartItemsWindow = new CartItemsWindow();
 				EbazaarMainFrame.getInstance().getDesktop()
 						.add(cartItemsWindow);
-				List<ICartItem> cartList = mShoppingCartSubsystem.getLiveCartItems();
+				double totalPrice = Double.parseDouble(selectedProduct.getUnitPrice()) * Integer.parseInt(quantityDesired);
+				try {
+					shoppingCartSubsystem.addCartItem(selectedProduct.getProductName(), quantityDesired, totalPrice + "", null);
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					GuiUtil.showMessageDialog(cartItemsWindow, "Unable to add cart item");
+				}
+				List<ICartItem> cartList = shoppingCartSubsystem.getLiveCartItems();
 				List<String[]> cartlistString = ShoppingCartUtil.cartItemsToStringArrays(cartList);
 				cartItemsWindow.updateModel(cartlistString);
 				cartItemsWindow.setVisible(true);

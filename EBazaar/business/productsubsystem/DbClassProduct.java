@@ -175,7 +175,7 @@ class DbClassProduct implements IDbClass {
 				productList.add(product);
 			}
 		} catch (SQLException e) {
-			throw new DatabaseException(e);
+			throw new DatabaseException("Unable to read product list");
 		} 
 	}
 
@@ -203,7 +203,7 @@ class DbClassProduct implements IDbClass {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			product = new Product(1,"","","","",1,"");
-			throw new DatabaseException(e);
+			throw new DatabaseException("Unable to get product details");
 		}
 	}
 	
@@ -215,7 +215,7 @@ class DbClassProduct implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException(e);
+			throw new DatabaseException("Unable to get product id");
 		}
 	}
 

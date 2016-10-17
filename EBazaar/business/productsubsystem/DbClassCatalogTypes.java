@@ -96,7 +96,7 @@ public class DbClassCatalogTypes implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException(e);
+			throw new DatabaseException("Unable to read catalog types");
 		}
     }
     
@@ -108,7 +108,7 @@ public class DbClassCatalogTypes implements IDbClass {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException(e);
+			throw new DatabaseException("Unable to get catalog id");
 		}
     }
 

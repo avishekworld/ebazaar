@@ -31,10 +31,9 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	}
 	
     public void retrieveSavedCart() throws DatabaseException {
-        
-        Integer val = getShoppingCartId();
-        if(val != null){
-            shopCartId = val;
+        Integer shoppintCartId = getShoppingCartId();
+        if(shoppintCartId != null){
+            shopCartId = shoppintCartId;
             log.info("cart id: "+shopCartId);
             List<ICartItem> items = getCartItems(shopCartId);
             log.info("list of items: "+items);
@@ -43,10 +42,7 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
         else {
         	savedCart = new ShoppingCart();
         }
-        
-        
     }
-    
     
     //supporting methods
     
@@ -101,27 +97,11 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	}
 
 	public List<ICartItem> getLiveCartItems() {
-        if(true || liveCart == null || liveCart.getCartItems() == null) {
-        	LinkedList<ICartItem> locaLiveCart = new LinkedList<ICartItem>();
-            try {
-				locaLiveCart.add(new CartItem("Garden of Rama","2","100"));
-				locaLiveCart.add(new CartItem("Pants","1","25"));
-				locaLiveCart.add(new CartItem("T-shirt","4","40"));
-			} catch (DatabaseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            return locaLiveCart;
-        }
-        else {
-            return liveCart.getCartItems();
-        }
-
+        return liveCart.getCartItems();        
 	}
 
 
 	public void setShippingAddress(IAddress addr) {
-        //liveCart should be non-null
         liveCart.setShipAddress(addr);
     }
  
@@ -141,7 +121,6 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	}
 	public void saveLiveCart() {
 		// implement
-		
 	}
 	
 	public void runShoppingCartRules() throws RuleException, EBazaarException {

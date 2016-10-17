@@ -48,7 +48,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
 		shoppingCartSubsystem.setCustomerProfile(customerProfile);
 		shoppingCartSubsystem.retrieveSavedCart();
-
 		loadOrderData();
 	}
 

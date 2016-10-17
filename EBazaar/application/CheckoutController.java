@@ -40,6 +40,8 @@ import business.util.StringParse;
 public class CheckoutController implements CleanupControl {
 	private static final Logger LOG = Logger.getLogger(CheckoutController.class
 			.getPackage().getName());
+	IShoppingCartSubsystem shoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
+	
 	private final String TERMS_MESSAGE_FILE = CustomerConstants.CURR_DIR
 			+ "/resources/terms.txt";
 	private final String GOODBYE_FILE = CustomerConstants.CURR_DIR
@@ -100,20 +102,26 @@ public class CheckoutController implements CleanupControl {
 		}
 
 		public void actionPerformed(ActionEvent evt) {
-			cartItemsWindow.setVisible(false);
-			/* check that cart is not empty before going to next screen */
-			Boolean loggedIn = (Boolean) context
-					.get(CustomerConstants.LOGGED_IN);
-			if (!loggedIn.booleanValue()) {
-				shippingBillingWindow = new ShippingBillingWindow();
-				LoginControl loginControl = new LoginControl(
-						shippingBillingWindow, cartItemsWindow, this);
+			
+			if(shoppingCartSubsystem.getLiveCartItems().isEmpty()){
+				JOptionPane.showMessageDialog(shipAddressesWindow,
+						"Shopping Cart is EMpty!", "Alert",
+						JOptionPane.ERROR_MESSAGE);
+			}else{
+				cartItemsWindow.setVisible(false);
+				boolean loggedIn = (Boolean) context
+						.get(CustomerConstants.LOGGED_IN);
+				if (!loggedIn) {
+					shippingBillingWindow = new ShippingBillingWindow();
+					LoginControl loginControl = new LoginControl(
+							shippingBillingWindow, cartItemsWindow, this);
 
-				loginControl.startLogin();
+					loginControl.startLogin();
 
-			} else {
-				populateScreen();
+				} else {
+					populateScreen();
 
+				}
 			}
 		}
 	}

@@ -48,8 +48,7 @@ public class CartItem implements ICartItem {
         this.totalprice =totalprice;
         this.alreadySaved = alreadySaved;
         IProductSubsystem prodSS= new ProductSubsystemFacade();
-        //productName = prodSS.getProductFromId(productid).getProductName();
-        productName = "??";
+        productName = prodSS.getProductFromId(productid + "").getProductName();
     }
 
     public String toString(){

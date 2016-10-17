@@ -61,7 +61,8 @@ class DbClassCreditCard implements IDbClass {
             }          
         }
         catch(SQLException e) {
-            throw new DatabaseException(e);
+        	e.printStackTrace();
+            throw new DatabaseException("Unable to read defauult payment info");
         }
         
     }
