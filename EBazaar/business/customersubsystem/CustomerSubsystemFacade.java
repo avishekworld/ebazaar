@@ -31,7 +31,6 @@ import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 import business.util.OrderUtil;
 
 public class CustomerSubsystemFacade implements ICustomerSubsystem {
-
 	IShoppingCartSubsystem shoppingCartSubsystem;
 	IOrderSubsystem orderSubsystem;
 	List<IOrder> orderHistory;
@@ -47,6 +46,9 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		loadDefaultPaymentInfo();
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.getInstance();
 		shoppingCartSubsystem.setCustomerProfile(customerProfile);
+		shoppingCartSubsystem.setShippingAddress(defaultShipAddress);
+		shoppingCartSubsystem.setBillingAddress(defaultBillAddress);
+		shoppingCartSubsystem.setPaymentInfo(defaultPaymentInfo);
 		shoppingCartSubsystem.retrieveSavedCart();
 		loadOrderData();
 	}
@@ -158,7 +160,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	}
 
 	public void saveShoppingCart() throws DatabaseException {
-		//IMPLEMENT
+		shoppingCartSubsystem.saveLiveCart();
 	}
 
 	// assumes array is in the form street,city,state,zip

@@ -90,5 +90,29 @@ public class OrderUtil {
     	return new ArrayList<String[]>();
         
     }
+    
+    public static double getShippingCost(List<ICartItem> items){
+    	double total = 0;
+    	for(ICartItem item:items){
+    		total = total + getShippingCost(item);
+    	}
+    	return total;
+    }
+    
+    public static double getShippingCost(ICartItem item){
+    	return 2;
+    }
+    
+    public static double getTax(List<ICartItem> items){
+    	double total = 0;
+    	for(ICartItem item:items){
+    		total = total + getTax(item);
+    	}
+    	return total;
+    }
+    
+    public static double getTax(ICartItem item){
+    	return 0.5;
+    }
 
 }

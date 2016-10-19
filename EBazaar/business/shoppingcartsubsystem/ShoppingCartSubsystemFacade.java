@@ -13,17 +13,19 @@ import business.externalinterfaces.IAddress;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICreditCard;
 import business.externalinterfaces.ICustomerProfile;
+import business.externalinterfaces.IProductSubsystem;
 import business.externalinterfaces.IRules;
 import business.externalinterfaces.IShoppingCart;
 import business.externalinterfaces.IShoppingCartSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
 
 
 public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
+	Logger log = Logger.getLogger(this.getClass().getPackage().getName());
     ShoppingCart liveCart;
     ShoppingCart savedCart;
     Integer shopCartId;
     ICustomerProfile customerProfile;
-	Logger log = Logger.getLogger(this.getClass().getPackage().getName());
     
     //interface methods
 	public void setCustomerProfile(ICustomerProfile customerProfile){
@@ -38,6 +40,7 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
             List<ICartItem> items = getCartItems(shopCartId);
             log.info("list of items: "+items);
             savedCart = new ShoppingCart(items);
+            savedCart.setCartId(shopCartId+"");
         }
         else {
         	savedCart = new ShoppingCart();
@@ -79,7 +82,12 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
         if(liveCart == null){
             liveCart = new ShoppingCart(new LinkedList<ICartItem>());
         }
-        CartItem item = new CartItem(itemName, quantity, totalPrice);
+        
+        IProductSubsystem productSubsystem = new ProductSubsystemFacade();
+        Integer productId = productSubsystem.getProductIdFromName(itemName);
+        CartItem item = new CartItem(null,productId, 
+                liveCart.getCartItems().size(),quantity, 
+                totalPrice,false);
         if(pos == null) liveCart.addItem(item);
         else liveCart.insertItem(pos, item);
     }
@@ -119,8 +127,15 @@ public class ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	public void makeSavedCartLive() {
 		liveCart = savedCart;		
 	}
-	public void saveLiveCart() {
-		// implement
+	public void saveLiveCart() throws DatabaseException {
+		DbClassShoppingCart dbClass = new DbClassShoppingCart();
+		if(liveCart.getCartId() == null){
+			shopCartId = dbClass.saveCartDetails(liveCart, customerProfile);
+			liveCart.setCartId(shopCartId + "");
+		}
+		dbClass.saveCartItems(liveCart, customerProfile);
+		retrieveSavedCart();
+		makeSavedCartLive();
 	}
 	
 	public void runShoppingCartRules() throws RuleException, EBazaarException {

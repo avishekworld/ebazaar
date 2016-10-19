@@ -67,7 +67,7 @@ public interface IShoppingCartSubsystem {
 	 */
 	public void makeSavedCartLive();
 
-	public void saveLiveCart();
+	public void saveLiveCart() throws DatabaseException;
 
       /**
        *  used when a user enters Checkout use case by

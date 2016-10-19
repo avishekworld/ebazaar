@@ -30,7 +30,6 @@ public interface ICustomerSubsystem {
      * to read current user's order history (not used during login process)*/
     public List<IOrder> getOrderHistory();
     
-    
     /** Used whenever a customer name needs to be accessed */
     public ICustomerProfile getCustomerProfile();
     

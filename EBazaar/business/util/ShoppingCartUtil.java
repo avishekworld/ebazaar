@@ -69,5 +69,18 @@ public class ShoppingCartUtil {
 		}
 		return newData;
 	}
+    
+    /**
+     * Return total price of a cart
+     * @param cart shopping cart whose total price need to be calculated
+     * @return total price
+     */
+    public static double getCartTotalPrice(IShoppingCart cart){
+    	double total = 0.0;
+    	for(ICartItem item:cart.getCartItems()){
+    		total = total + Double.parseDouble(item.getTotalprice());
+    	}
+    	return total;
+    }
 
 }

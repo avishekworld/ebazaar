@@ -108,7 +108,7 @@ public class BrowseAndSelectController implements CleanupControl {
 			if (!loggedIn) {
 				cartItemsWindow = new  CartItemsWindow();
 				LoginControl loginControl = new LoginControl(
-						cartItemsWindow, EbazaarMainFrame.getInstance(), this);
+						cartItemsWindow, mainFrame, this);
 
 				loginControl.startLogin();
 			} else {
@@ -313,7 +313,26 @@ public class BrowseAndSelectController implements CleanupControl {
 		}
 	}
 
-	class SaveCartListener implements ActionListener {
+	class SaveCartListener implements ActionListener, Controller  {
+		SessionContext context = SessionContext.getInstance();
+		
+		public void doUpdate() {
+			proceedToSaveCart();
+		}
+		
+		void proceedToSaveCart(){
+			ICustomerSubsystem customerSubsystem = (ICustomerSubsystem)SessionContext.getInstance().get(CustomerConstants.CUSTOMER);
+			try {
+				customerSubsystem.saveShoppingCart();
+				GuiUtil.showMessageDialog(cartItemsWindow, "Shopping Cart Saved");
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				GuiUtil.showMessageDialog(cartItemsWindow, "Shopping Cart Save Failed");
+			}
+			
+		}
+		
 		public void actionPerformed(ActionEvent evt) {
 			// implement
 			// here's the logic:
@@ -332,6 +351,17 @@ public class BrowseAndSelectController implements CleanupControl {
 			// not-so-far-saved cart items
 			// postcondition: the live cart has a cartid
 			// and all cart items are flagged as "hasBeenSaved"
+			
+			boolean loggedIn = (Boolean) context
+					.get(CustomerConstants.LOGGED_IN);
+			if (!loggedIn) {
+				LoginControl loginControl = new LoginControl(
+						cartItemsWindow, mainFrame, this);
+
+				loginControl.startLogin();
+			} else {
+				proceedToSaveCart();
+			}
 
 		}
 	}
