@@ -38,6 +38,7 @@ class DbClassProduct implements IDbClass {
 	private IProductFromGui prodFromGui;
 	private List<IProductFromDb> productList;
 	private String productName;
+	private String productDescription;
 	private Integer catalogId;
 	private Integer productId;
 
@@ -45,6 +46,7 @@ class DbClassProduct implements IDbClass {
 	private static final String READ_PRODUCT = "ReadProduct";
 	private static final String READ_PROD_LIST = "ReadProdList";
 	private static final String GET_PRODUCT_ID = "GetProductId";
+	private final String SAVE = "Save";
 
 	public void buildQuery() {
 		if (queryType.equals(LOAD_PROD_TABLE)) {
@@ -55,7 +57,9 @@ class DbClassProduct implements IDbClass {
 			buildProdListQuery();
 		} else if (queryType.equals(GET_PRODUCT_ID)) {
 			buildGetProductIdQuery();
-		}
+		}else if(queryType.equals(SAVE)){
+        	buildSaveProductQuery();
+        }
 
 	}
 
@@ -73,6 +77,14 @@ class DbClassProduct implements IDbClass {
 	
 	void buildGetProductIdQuery() {
         query = "SELECT productid FROM Product where productname='" + productName+ "'";       
+    }
+	
+	void buildSaveProductQuery() {
+        query = "insert into product values (null," + catalogId+ ",'" + 
+        		prodFromGui.getProductName() + "'," +   
+        		prodFromGui.getQuantityAvail() + "," +  
+        		prodFromGui.getUnitPrice() + ",'" +
+        		prodFromGui.getMfgDate() + "', '"+ productDescription+"')";
     }
 
 	public TwoKeyHashMap<Integer, String, IProductFromDb> readProductTable()
@@ -136,7 +148,11 @@ class DbClassProduct implements IDbClass {
 	 */
 	public void saveNewProduct(IProductFromGui product, Integer catalogid,
 			String description) throws DatabaseException {
-		//IMPLEMENT
+		prodFromGui = product;
+		this.catalogId = catalogid;
+		productDescription = description;
+		queryType = SAVE;
+		dataAccessSS.saveWithinTransaction(this);
 	}
 
 	public void populateEntity(ResultSet resultSet) throws DatabaseException {

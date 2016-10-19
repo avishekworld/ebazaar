@@ -47,7 +47,7 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		//invent description
 		String description = DEFAULT_PROD_DESCRIPTION;
 		DbClassProduct dbclass = new DbClassProduct();
-		dbclass.saveNewProduct(product, catalogid,description);
+		dbclass.saveNewProduct(product, catalogid, description);
 		
 	}
 	/* reads quantity avail and stores in the Quantity argument */
@@ -108,14 +108,13 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		return product;
 	}
 	@Override
-	public void saveNewCatalogName(String name) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+	public void saveNewCatalogName(String catalogName) throws DatabaseException {
+		DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
+		dbClass.saveNewCatalog(catalogName);
 	}
 	@Override
 	public IProductFromGui createProduct(String name, String date, String numAvail, String unitPrice) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Product("Sample Item", "10/18/2016", "08", "5.00");
 	}
 
 	

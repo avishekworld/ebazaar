@@ -31,6 +31,7 @@ public class DbClassCatalogTypes implements IDbClass {
     
     private static final String GET_CATALOG_TYPES = "GetCatalogTypes";
     private static final String GET_CATALOG_ID = "GetCatalogId";
+    private final String SAVE = "Save";
     
     public CatalogTypes getCatalogTypes() throws DatabaseException {
         return catalogTypes;       
@@ -41,6 +42,8 @@ public class DbClassCatalogTypes implements IDbClass {
             buildGetTypesQuery();
         }else if(queryType.equals(GET_CATALOG_ID)){
         	buildGetCatagoryIdQuery();
+        }else if(queryType.equals(SAVE)){
+        	buildSaveCatagoryQuery();
         }
     }
 
@@ -50,6 +53,10 @@ public class DbClassCatalogTypes implements IDbClass {
     
     void buildGetCatagoryIdQuery() {
         query = "SELECT catalogid FROM CatalogType where catalogname='" + catalogName+ "'";       
+    }
+    
+    void buildSaveCatagoryQuery() {
+        query = "insert into catalogtype values (null,'" + catalogName+ "')";       
     }
     
     public Integer getCatalogIdFromType(String catType) throws DatabaseException{
@@ -70,6 +77,12 @@ public class DbClassCatalogTypes implements IDbClass {
 		queryType = GET_CATALOG_TYPES;
 		dataAccessSS.atomicRead(this);
 		return Collections.unmodifiableList(catalogTypes.getCatalogNames());
+	}
+	
+	public void saveNewCatalog(String catalogName) throws DatabaseException {
+		this.catalogName = catalogName;
+		queryType = SAVE;
+		dataAccessSS.saveWithinTransaction(this);
 	}
 	
     /**
@@ -118,7 +131,6 @@ public class DbClassCatalogTypes implements IDbClass {
     }
 
     public String getQuery() {
-
         return query;
     }
 

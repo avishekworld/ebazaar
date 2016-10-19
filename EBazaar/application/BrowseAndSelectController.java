@@ -20,6 +20,7 @@ import business.externalinterfaces.CustomerConstants;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICustomerSubsystem;
 import business.externalinterfaces.IProductFromDb;
+import business.externalinterfaces.IProductFromGui;
 import business.externalinterfaces.IProductSubsystem;
 import business.externalinterfaces.IRules;
 import business.externalinterfaces.IShoppingCart;
