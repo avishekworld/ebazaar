@@ -53,14 +53,15 @@ public class ViewOrdersController implements CleanupControl {
 				// and then read the appropriate order from the history, using
 				// order id
 				ICustomerSubsystem customerSubsystem = (ICustomerSubsystem)SessionContext.getInstance().get(CustomerConstants.CUSTOMER);
-				List<IOrder> orderList = customerSubsystem.getOrderHistory();
-				IOrder order = OrderUtil.getSpecificOrderFromList(orderList, selOrderId);
 				try {
+					List<IOrder> orderList = customerSubsystem.getOrderHistory();
+					IOrder order = OrderUtil.getSpecificOrderFromList(orderList, Integer.parseInt(selOrderId));
 					List<String[]> orderDetailsData = OrderUtil.makeItemsDisplayable(order.getOrderItems());
 					viewOrderDetailsWindow.updateModel(orderDetailsData);
 				} catch (DatabaseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable to get order history");
 				}
 				
 				viewOrderDetailsWindow.setVisible(true);
@@ -100,12 +101,18 @@ public class ViewOrdersController implements CleanupControl {
 				SessionContext context = SessionContext.getInstance();
 				ICustomerSubsystem customer = (ICustomerSubsystem)context.get(CustomerConstants.CUSTOMER);
 				if(customer !=null) {
-					List<IOrder> orderList = customer.getOrderHistory();
-					List<String[]> displayableList = OrderUtil.extractOrderData(orderList);			
-					selectOrderWindow.updateModel(displayableList);
+					List<IOrder> orderList;
+					try {
+						orderList = customer.getOrderHistory();
+						List<String[]> displayableList = OrderUtil.extractOrderData(orderList);			
+						selectOrderWindow.updateModel(displayableList);
+					} catch (DatabaseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						GuiUtil.showMessageDialog(mainFrame, "Unable to get order history");
+					}
 					mainFrame.getDesktop().add(selectOrderWindow);
 					selectOrderWindow.setVisible(true);
-					
 				}
 			}
 		}	    
@@ -125,9 +132,15 @@ public class ViewOrdersController implements CleanupControl {
 			else {//already logged in
 			
 				customer = (ICustomerSubsystem)context.get(CustomerConstants.CUSTOMER);
-				orderList = customer.getOrderHistory();
-				List<String[]> displayableList = OrderUtil.extractOrderData(orderList);
-				selectOrderWindow.updateModel(displayableList);
+				try {
+					orderList = customer.getOrderHistory();
+					List<String[]> displayableList = OrderUtil.extractOrderData(orderList);
+					selectOrderWindow.updateModel(displayableList);
+				} catch (DatabaseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable to get order history");
+				}
 				mainFrame.getDesktop().add(selectOrderWindow);
 				selectOrderWindow.setVisible(true);
 				

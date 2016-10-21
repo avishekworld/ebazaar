@@ -119,7 +119,7 @@ public class OrderUtil {
     	return 0.5;
     }
 
-    public static IOrder getSpecificOrderFromList(List<IOrder> allOrders, String orderNo){
+    public static IOrder getSpecificOrderFromList(List<IOrder> allOrders, Integer orderNo){
     	for(IOrder order:allOrders){
     		if(order.getOrderId().equals(orderNo)){
     			return order;

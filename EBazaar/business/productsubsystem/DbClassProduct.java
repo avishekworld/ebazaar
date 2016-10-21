@@ -200,7 +200,32 @@ class DbClassProduct implements IDbClass {
 	 */
 	private void populateProdTable(ResultSet rs) throws DatabaseException {
 		productTable = new TwoKeyHashMap<Integer, String, IProductFromDb>();
-		
+		if(rs != null){
+			try {
+				IProductFromDb product = null;
+				Integer prodId = null;
+				String productName = null;
+				String quantityAvail = null;
+				String unitPrice = null;
+				String mfgDate = null;
+				Integer catalogId = null;
+				String description = null;
+				while (rs.next()) {
+					prodId = rs.getInt("productid");
+					productName = rs.getString("productname");
+					quantityAvail = makeString(rs.getInt("totalquantity"));
+					unitPrice = makeString(rs.getDouble("priceperunit"));
+					mfgDate = rs.getString("mfgdate");
+					catalogId = rs.getInt("catalogid");
+					description = rs.getString("description");
+					product = new Product(prodId, productName, quantityAvail,
+							unitPrice, mfgDate, catalogId, description);
+					productTable.put(prodId, productName, product);
+				}
+			} catch (SQLException e) {
+				throw new DatabaseException("Unable to create helper product table");
+			}
+		}
 	}
 
 	private void populateProduct(ResultSet rs) throws DatabaseException {

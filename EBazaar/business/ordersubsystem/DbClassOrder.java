@@ -10,6 +10,9 @@ import static business.util.StringParse.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.sun.crypto.provider.RSACipher;
+
+
 import business.externalinterfaces.IAddress;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICreditCard;
@@ -42,73 +45,56 @@ class DbClassOrder implements IDbClass {
     private List<IOrderItem> orderItems;
     private Order orderData;    
     
+    public void buildQuery() {
+        if(queryType.equals(GET_ORDER_ITEMS)){
+            buildGetOrderItemsQuery();
+        }
+        else if(queryType.equals(GET_ORDER_IDS)){
+            buildGetOrderIdsQuery();
+        }
+        else if(queryType.equals(GET_ORDER_DATA)){
+        	buildGetOrderDataQuery();
+        }
+    }
+    private void buildGetOrderDataQuery() {
+        query = "SELECT orderdate, totalpriceamount FROM Ord WHERE orderid = '"+orderId+"'";
+    }
+    private void buildGetOrderIdsQuery() {
+        query = "SELECT orderid FROM Ord WHERE custid = '"+customerProfile.getCustId()+"'";
+    }
+    private void buildGetOrderItemsQuery() {
+        query = "SELECT * FROM OrderItem WHERE orderid = '"+orderId+"'";
+    }
+    
     public List<String> getAllOrderIds(ICustomerProfile customerProfile) throws DatabaseException {
         //implement
     	this.customerProfile=customerProfile;
+    	queryType = GET_ORDER_IDS;
     	orderIds = new LinkedList<String>();
-    	/*dataAccessSS.createConnection(this);
-		dataAccessSS.read();*/
+    	dataAccessSS.createConnection(this);
+		dataAccessSS.read();
 		return orderIds;
         
     }
     public Order getOrderData(String orderId) throws DatabaseException {
     	//implement
     	this.orderId = orderId;
-    	orderData = new Order(1,"","");
-    	/*dataAccessSS.createConnection(this);
-		dataAccessSS.read();*/
+    	queryType = GET_ORDER_DATA;
+    	dataAccessSS.createConnection(this);
+		dataAccessSS.read();
+		List<IOrderItem> orderItems = getOrderItems(orderId);
+		orderData.setOrderItems(orderItems);
     	return orderData;
     }
     
     public List<IOrderItem> getOrderItems(String orderId) throws DatabaseException {
-        
-        orderItems = new LinkedList<IOrderItem>();
+    	this.orderId = orderId;
+    	queryType = GET_ORDER_ITEMS;
+    	dataAccessSS.createConnection(this);
+		dataAccessSS.read();
         return orderItems;
-        
-    }
-    public void buildQuery() {
-        if(queryType.equals(GET_ORDER_ITEMS)){
-            buildGetOrderItemsQuery();
-        }
-        else if(queryType.equals(GET_ORDER_IDS)){
-            
-            buildGetOrderIdsQuery();
-        }
-        else if(queryType.equals(GET_ORDER_DATA)){
-        	buildGetOrderDataQuery();
-        }
-
-        
-    }
-    private void buildGetOrderDataQuery() {
-        query = "SELECT orderdate, totalpriceamount FROM Ord WHERE orderid = '"+orderId+"'";
-    
-        
     }
     
-
-    private void buildGetOrderIdsQuery() {
-        query = "SELECT orderid FROM Ord WHERE custid = '"+customerProfile.getCustId()+"'";
-    
-        
-    }
-    private void buildGetOrderItemsQuery() {
-        query = "SELECT * FROM OrderItem WHERE orderid = '"+orderId+"'";
-    
-    }
-    private void populateOrderItems(ResultSet rs) throws DatabaseException {
-        orderItems = new LinkedList<IOrderItem>();
-        //implement
-    }
-    private void populateOrderIds(ResultSet resultSet) throws DatabaseException {
-        orderIds = new LinkedList<String>();
-        //implement
-    }
-    private void populateOrderData(ResultSet resultSet) throws DatabaseException {
-    	//implement
-    	orderData = new Order(1,"","");
-    }    
- 
     public void populateEntity(ResultSet resultSet) throws DatabaseException {
         if(queryType.equals(GET_ORDER_ITEMS)){
             populateOrderItems(resultSet);
@@ -119,8 +105,58 @@ class DbClassOrder implements IDbClass {
         else if(queryType.equals(GET_ORDER_DATA)){
         	populateOrderData(resultSet);
         }
-        
     }
+    
+    private void populateOrderItems(ResultSet rs) throws DatabaseException {
+        orderItems = new LinkedList<IOrderItem>();
+        if(rs != null){
+        	try {
+				while(rs.next()){
+					int orderid = rs.getInt("orderid");
+					int productid = rs.getInt("productid");
+					int quantity = rs.getInt("quantity");
+					double totalprice= rs.getDouble("totalprice");
+					OrderItem orderItem = new OrderItem(productid, orderid, quantity +"", totalprice + "");
+					orderItems.add(orderItem);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new DatabaseException(e);
+			}
+        }
+        //implement
+    }
+    private void populateOrderIds(ResultSet resultSet) throws DatabaseException {
+        orderIds = new LinkedList<String>();
+        if(resultSet != null){
+        	try {
+				while(resultSet.next()) {
+				    int orderId = resultSet.getInt("orderid");
+				    orderIds.add(orderId +"");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				throw new DatabaseException(e);
+			} 
+        }
+    }
+    private void populateOrderData(ResultSet resultSet) throws DatabaseException {
+    	//implement
+    	if(resultSet != null){
+    		try {
+				resultSet.first();
+				String orderdate = resultSet.getString("orderdate");
+	        	double totalpriceamount = resultSet.getDouble("totalpriceamount");
+	        	orderData = new Order(Integer.parseInt(orderId), orderdate, totalpriceamount +"");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new DatabaseException(e);
+			}
+        }
+    }    
+ 
     public String getDbUrl() {
     	DbConfigProperties props = new DbConfigProperties();	
     	return props.getProperty(DbConfigKey.ACCOUNT_DB_URL.getVal());

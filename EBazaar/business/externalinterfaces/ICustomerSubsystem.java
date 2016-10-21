@@ -27,8 +27,9 @@ public interface ICustomerSubsystem {
     public List<IAddress> getAllAddresses() throws DatabaseException;
     
     /** Used to obtain this customer's order history. Used by other subsystems
-     * to read current user's order history (not used during login process)*/
-    public List<IOrder> getOrderHistory();
+     * to read current user's order history (not used during login process)
+     * @throws DatabaseException */
+    public List<IOrder> getOrderHistory() throws DatabaseException;
     
     /** Used whenever a customer name needs to be accessed */
     public ICustomerProfile getCustomerProfile();

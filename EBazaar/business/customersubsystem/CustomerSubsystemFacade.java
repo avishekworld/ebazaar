@@ -89,7 +89,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	void loadOrderData() throws DatabaseException {
 		// retrieve the order history for the customer and store here
 		orderSubsystem = new OrderSubsystemFacade(customerProfile);
-		//orderHistory = orderSubsystem.getOrderHistory();
+		orderHistory = orderSubsystem.getOrderHistory();
 	}
 
 	public IAddress createAddress(String street, String city, String state,
@@ -99,11 +99,12 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	/**
 	 * Return an (unmodifiable) copy of the order history.
+	 * @throws DatabaseException 
 	 */
-	public List<IOrder> getOrderHistory() {
-		
+	public List<IOrder> getOrderHistory() throws DatabaseException {
 		//IMPLEMENT
-		return Collections.unmodifiableList(new ArrayList<IOrder>());
+		orderHistory = orderSubsystem.getOrderHistory();
+		return Collections.unmodifiableList(orderHistory);
 	}
 
 	public void saveNewAddress(IAddress addr) throws DatabaseException {
