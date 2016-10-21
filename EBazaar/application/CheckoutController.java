@@ -28,6 +28,7 @@ import business.RuleException;
 import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
 import business.externalinterfaces.IAddress;
+import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICreditCard;
 import business.externalinterfaces.ICustomerProfile;
 import business.externalinterfaces.ICustomerSubsystem;
@@ -219,11 +220,12 @@ public class CheckoutController implements CleanupControl {
 
 		void setupPaymentWindow() {
 			// get default payment info from customer object
-			// ICreditCard cc = cust.getDefaultPaymentInfo();
-			// String[] ccAsArray = CustomerUtil.creditCardToStringArray(cc);
+			ICreditCard cc = cust.getDefaultPaymentInfo();
+			String[] ccAsArray = CustomerUtil.creditCardToStringArray(cc);
 
 			// fake data implementation
-			String[] ccAsArray = new String[] { "avishek", "1234567812345678", "Visa", "01/12/2019" };
+			//String[] ccAsArray = new String[] { "avishek", "1234567812345678", "Visa", "01/12/2019" };
+			
 			paymentWindow = new PaymentWindow();
 			paymentWindow.setCredCardFields(ccAsArray[0], ccAsArray[1],
 					ccAsArray[2], ccAsArray[3]);
@@ -258,13 +260,13 @@ public class CheckoutController implements CleanupControl {
 				if (shippingBillingWindow != null) {
 					shippingBillingWindow.setShippingAddress(name,
 							(String) model.getValueAt(selectedRow,
-									DefaultData.STREET_INT), (String) model
+									CustomerUtil.STREET_INT), (String) model
 									.getValueAt(selectedRow,
-											DefaultData.CITY_INT),
+											CustomerUtil.CITY_INT),
 							(String) model.getValueAt(selectedRow,
-									DefaultData.STATE_INT), (String) model
+									CustomerUtil.STATE_INT), (String) model
 									.getValueAt(selectedRow,
-											DefaultData.ZIP_INT));
+											CustomerUtil.ZIP_INT));
 					// EbazaarMainFrame.getInstance().getDesktop().add(shippingBillingWindow);
 					shippingBillingWindow.setVisible(true);
 				}
@@ -344,6 +346,9 @@ public class CheckoutController implements CleanupControl {
 		public void actionPerformed(ActionEvent evt) {
 			finalOrderWindow = new FinalOrderWindow();
 			EbazaarMainFrame.getInstance().getDesktop().add(finalOrderWindow);
+			List<ICartItem> cartList = shoppingCartSubsystem.getLiveCartItems();
+			List<String[]> cartlistString = ShoppingCartUtil.cartItemsToStringArrays(cartList);
+			finalOrderWindow.updateModel(cartlistString);
 			finalOrderWindow.setVisible(true);
 			termsWindow.dispose();
 

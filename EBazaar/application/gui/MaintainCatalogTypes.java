@@ -36,7 +36,7 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	private final String ADD = "Add";
 	private final String EDIT = "Edit";
 	private final String DELETE = "Delete";
@@ -158,15 +158,11 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
 	
 
 	private void updateModel() {
-
         if(USE_DEFAULT_DATA) {			        	
-			List<String[]> defaultData = DefaultData.getCatalogTypes();
-			updateModel(defaultData);
+			/*List<String[]> defaultData = DefaultData.getCatalogTypes();
+			updateModel(defaultData);*/
         }
-
 	}	
-
-	
 	
     private void updateTable() {
     	if(model != null && table !=null) {
@@ -175,8 +171,6 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
         	table.updateUI();
         }
         repaint();
-
-        
     }	
 
 	private void defineLowerPanel() {

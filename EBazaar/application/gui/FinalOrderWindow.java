@@ -156,8 +156,8 @@ public class FinalOrderWindow extends JInternalFrame implements ParentWindow {
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getFinalOrderData();
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getFinalOrderData();*/
         }
 		updateModel(theData);
  	}		

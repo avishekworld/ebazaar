@@ -28,9 +28,10 @@ import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
 import business.externalinterfaces.IProductSubsystem;
 import business.productsubsystem.ProductSubsystemFacade;
+import business.util.ProductUtil;
 
 public class ManageProductsController implements CleanupControl {
-
+	static IProductSubsystem productSubsystem = new ProductSubsystemFacade();
 	// ///////// EVENT HANDLERS -- new code goes here ////////////
 
 	// // control MaintainCatalogTYpes
@@ -97,10 +98,17 @@ public class ManageProductsController implements CleanupControl {
 		 * products
 		 */
 		public void doUpdate() {
-
 			// implement by requesting product catalog for selected
 			// catalogtype from Product Subsystem
-
+			mainFrame.getDesktop().add(maintainProductCatalog);
+			/*try {
+				List<String[]> productList = ProductUtil.extractProductNames(productSubsystem.getProductList("Books"));
+				maintainProductCatalog.updateModel(productList);
+			} catch (DatabaseException ex) {
+				ex.printStackTrace();
+				GuiUtil.showMessageDialog(mainFrame, "Unable To Get Product List");
+			}*/
+			maintainProductCatalog.setVisible(true);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -114,14 +122,20 @@ public class ManageProductsController implements CleanupControl {
 				LoginControl loginControl = new LoginControl(
 						maintainProductCatalog, mainFrame, this);
 				loginControl.startLogin();
-				System.out.println("hello");
 			} else {
-
 				mainFrame.getDesktop().add(maintainProductCatalog);
+				/*try {
+					List<String[]> productList = ProductUtil.extractProductNames(productSubsystem.getProductList("Books"));
+					maintainProductCatalog.updateModel(productList);
+				} catch (DatabaseException ex) {
+					ex.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable To Get Product List");
+				}*/
 				maintainProductCatalog.setVisible(true);
 			}
 		}
 	}
+	
 
 	class MaintainCatalogTypesActionListener implements ActionListener,
 			Controller {
@@ -131,6 +145,15 @@ public class ManageProductsController implements CleanupControl {
 		 */
 		public void doUpdate() {	
 			// implement by requesting catalog list from Product Subsystem	
+			maintainCatalogTypes = new MaintainCatalogTypes();
+			mainFrame.getDesktop().add(maintainCatalogTypes);
+			try {
+				maintainCatalogTypes.updateModel(productSubsystem.getCatalogNames());
+			} catch (DatabaseException e1) {
+				e1.printStackTrace();
+				GuiUtil.showMessageDialog(mainFrame, "Unable to get catalog types");
+			}
+			maintainCatalogTypes.setVisible(true);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -144,8 +167,13 @@ public class ManageProductsController implements CleanupControl {
 			} else {
 				maintainCatalogTypes = new MaintainCatalogTypes();
 				mainFrame.getDesktop().add(maintainCatalogTypes);
+				try {
+					maintainCatalogTypes.updateModel(productSubsystem.getCatalogNames());
+				} catch (DatabaseException e1) {
+					e1.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable to get catalog types");
+				}
 				maintainCatalogTypes.setVisible(true);
-
 			}
 		}
 	}
@@ -187,26 +215,26 @@ public class ManageProductsController implements CleanupControl {
 			String catalogType = maintainProductCatalog.getCatalogGroup();
 			int selectedRow = table.getSelectedRow();
 			if (selectedRow >= 0) {
-				String[] fldNames = DefaultData.FIELD_NAMES;
+				String[] fldNames = ProductUtil.FIELD_NAMES;
 				Properties productInfo = new Properties();
 
 				// index for Product Name
-				int columnIndex = DefaultData.PRODUCT_NAME_INT;
+				int columnIndex = ProductUtil.PRODUCT_NAME_INT;
 				productInfo.setProperty(fldNames[columnIndex],
 						(String) model.getValueAt(selectedRow, columnIndex));
 
 				// index for Price Per Unit
-				columnIndex = DefaultData.PRICE_PER_UNIT_INT;
+				columnIndex = ProductUtil.PRICE_PER_UNIT_INT;
 				productInfo.setProperty(fldNames[columnIndex],
 						(String) model.getValueAt(selectedRow, columnIndex));
 
 				// index for Mfg Date
-				columnIndex = DefaultData.MFG_DATE_INT;
+				columnIndex = ProductUtil.MFG_DATE_INT;
 				productInfo.setProperty(fldNames[columnIndex],
 						(String) model.getValueAt(selectedRow, columnIndex));
 
 				// index for Quantity
-				columnIndex = DefaultData.QUANTITY_INT;
+				columnIndex = ProductUtil.QUANTITY_INT;
 				productInfo.setProperty(fldNames[columnIndex],
 						(String) model.getValueAt(selectedRow, columnIndex));
 
@@ -312,23 +340,24 @@ public class ManageProductsController implements CleanupControl {
 			// if(mainFrame != null) mainFrame.setVisible(false);
 			String selectedValue = (String) ((JComboBox) evt.getSource())
 					.getSelectedItem();
-			IProductSubsystem prodSS = new ProductSubsystemFacade();
-			
 			//IMPLEMENT
-			/* will work when ProductSubsystemFacade is completed
-			List<String[]> associatedProducts = business.util.ProductUtil
-					.extractProductInfoForManager(prodSS
-							.getProductList(selectedValue));*/
-			List<String[]> associatedProducts = new ArrayList<String[]>();
-			for (IComboObserver o : observers) {
-				if (o != null) {
-					o.setCatalogGroup(selectedValue);
-					o.refreshData();
+			 //will work when ProductSubsystemFacade is completed
+			List<String[]> associatedProducts;
+			try {
+				associatedProducts = ProductUtil.extractProductInfoForManager(productSubsystem.getProductList(selectedValue));
+				for (IComboObserver o : observers) {
+					if (o != null) {
+						o.setCatalogGroup(selectedValue);
+						o.refreshData();
+					}
 				}
-			}
-			if (maintainProductCatalog != null) {
-				maintainProductCatalog.updateModel(associatedProducts);
-				maintainProductCatalog.repaint();
+				if (maintainProductCatalog != null) {
+					maintainProductCatalog.updateModel(associatedProducts);
+					maintainProductCatalog.repaint();
+				}
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				GuiUtil.showMessageDialog(mainFrame, "Unable to get Product List");
 			}
 		
 		}

@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.Action;
@@ -18,8 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import business.externalinterfaces.CustomerConstants;
+import com.sun.org.apache.xalan.internal.lib.ExsltStrings;
 
+import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
+import business.util.ProductUtil;
+import middleware.DatabaseException;
 import application.ApplicationCleanup;
 import application.GuiUtil;
 import application.IComboObserver;
@@ -44,7 +50,7 @@ public class AddEditProduct extends JInternalFrame implements ParentWindow, ICom
 	private JTextField pricePerUnitField;
 	private JTextField mfgDateField;	
 	private JTextField quantityField;
-	String[] fldNames = DefaultData.FIELD_NAMES;
+	String[] fldNames = ProductUtil.FIELD_NAMES;
 	
 	/** group is "Books", "Clothes" etc */
 	private String catalogGroup;
@@ -143,7 +149,7 @@ public class AddEditProduct extends JInternalFrame implements ParentWindow, ICom
 		//add fields
 		
 		
-		String labelName = fldNames[DefaultData.PRODUCT_NAME_INT];
+		String labelName = fldNames[ProductUtil.PRODUCT_NAME_INT];
 		makeLabel(gridPanel,labelName);
 		productNameField = new JTextField(10);
 		productNameField.setText(fieldValues.getProperty(labelName));
@@ -155,8 +161,17 @@ public class AddEditProduct extends JInternalFrame implements ParentWindow, ICom
 		labelName = "Catalog";
 		makeLabel(gridPanel,labelName);
 		catalogGroupField = new JComboBox();
-		catalogGroupField.addItem(DefaultData.BOOKS);
-		catalogGroupField.addItem(DefaultData.CLOTHES);
+		try {
+			IProductSubsystem productSubsystem = new ProductSubsystemFacade();
+			List<String[]> catalogNames = productSubsystem.getCatalogNames();
+			for(String []catalog:catalogNames){
+				catalogGroupField.addItem(catalog[0]);
+			}
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+			GuiUtil.showMessageDialog(this, "Unable to get Catalog Names");
+		}
+	
 		catalogGroupField.setSelectedItem(catalogGroup);
 		if(isEditMode()) catalogGroupField.setEnabled(false);
 		
@@ -166,19 +181,19 @@ public class AddEditProduct extends JInternalFrame implements ParentWindow, ICom
 		catalogGroupField.addActionListener(comboAction);
 		gridPanel.add(catalogGroupField);
 		
-		labelName = fldNames[DefaultData.PRICE_PER_UNIT_INT];
+		labelName = fldNames[ProductUtil.PRICE_PER_UNIT_INT];
 		makeLabel(gridPanel,labelName);
 		pricePerUnitField = new JTextField(10);
 		pricePerUnitField.setText(fieldValues.getProperty(labelName));
 		gridPanel.add(pricePerUnitField);		
 		
-		labelName = fldNames[DefaultData.MFG_DATE_INT];
+		labelName = fldNames[ProductUtil.MFG_DATE_INT];
 		makeLabel(gridPanel,labelName);
 		mfgDateField = new JTextField(10);
 		mfgDateField.setText(fieldValues.getProperty(labelName));
 		gridPanel.add(mfgDateField);
 						
-		labelName = fldNames[DefaultData.QUANTITY_INT];
+		labelName = fldNames[ProductUtil.QUANTITY_INT];
 		makeLabel(gridPanel,labelName);
 		quantityField = new JTextField(10);
 		quantityField.setText(fieldValues.getProperty(labelName));

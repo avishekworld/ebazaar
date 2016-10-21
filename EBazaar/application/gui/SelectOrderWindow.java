@@ -164,8 +164,8 @@ public class SelectOrderWindow extends JInternalFrame implements ParentWindow {
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getSelectOrderDefaultData();
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getSelectOrderDefaultData();*/
         }
 		updateModel(theData);
  	}	

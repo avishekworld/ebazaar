@@ -10,6 +10,13 @@ import business.externalinterfaces.IProductFromDb;
 
 public class ProductUtil {
 	
+	public static final String[] FIELD_NAMES = {"Product Name","Price Per Unit","Mfg. Date","Quantity"};
+	public static final int PRODUCT_NAME_INT = 0;
+	public static final int PRICE_PER_UNIT_INT = 1;
+	public static final int MFG_DATE_INT = 2;
+	public static final int QUANTITY_INT = 3;
+	public static final String CAT_GROUP = "Catalog Group"; 
+	
     public static List<String[]> extractProductNames(List<IProductFromDb> prodList){
         final int PROD_NAME = 0;   
 		List<String[]> returnValue = new LinkedList<String[]>();
@@ -54,9 +61,19 @@ public class ProductUtil {
     //this is used in the Product manager use case
     public static String[] extractProdInfoForManager(IProductFromDb product){
     	//IMPLEMENT
-    	return new String[]{"product_name", "unit_price", "mgf_date", "quantity_avail"};
-        
-        
+    	final int SIZE = 4;
+        final int PROD_NAME = 0;
+        final int UNIT_PRICE = 1;
+        final int MGF_DATE = 2;
+        final int QUANTITY = 3;
+        String[] returnValue = new String[SIZE];
+        if(product != null){
+            returnValue[PROD_NAME]=product.getProductName();
+            returnValue[UNIT_PRICE]=product.getUnitPrice();
+            returnValue[MGF_DATE]=product.getMfgDate();
+            returnValue[QUANTITY]=product.getQuantityAvail();
+        }
+        return returnValue;
     }
     public static List<String[]> extractProductInfoForManager(List<IProductFromDb> list) {
     	int size = list.size();

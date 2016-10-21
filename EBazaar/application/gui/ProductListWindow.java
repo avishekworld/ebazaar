@@ -101,8 +101,8 @@ public class ProductListWindow extends JInternalFrame implements ParentWindow {
 	//this method iniitializes the table of headers for the table columns
 	private void initializeTableHeaderTable() {
 		headers = new Properties(); 
-		headers.setProperty(DefaultData.BOOKS,this.AVAIL_BOOKS);
-		headers.setProperty(DefaultData.CLOTHES,this.AVAIL_CLOTHING);		
+		//headers.setProperty(DefaultData.BOOKS,this.AVAIL_BOOKS);
+		//headers.setProperty(DefaultData.CLOTHES,this.AVAIL_CLOTHING);		
 		
 	}
 
@@ -185,8 +185,8 @@ public class ProductListWindow extends JInternalFrame implements ParentWindow {
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getCatalogWindowData(catalogType);
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getCatalogWindowData(catalogType);*/
         }
 		updateModel(theData);
  	}		

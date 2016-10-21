@@ -22,7 +22,10 @@ import javax.swing.JTable;
 import javax.swing.JWindow;
 
 import business.externalinterfaces.CustomerConstants;
-
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
+import business.util.ProductUtil;
+import middleware.DatabaseException;
 import application.GuiUtil;
 import application.IComboObserver;
 import application.ManageProductsController;
@@ -35,7 +38,6 @@ import application.ManageProductsController;
  * the choices of products.
  */
 public class MaintainProductCatalog extends JInternalFrame implements ParentWindow, IComboObserver {
-	private String DEFAULT_CATALOG = "Books";
 	ManageProductsController control;
 	private Component parent;
 	CustomTableModel model;
@@ -50,10 +52,10 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 	JComboBox catalogTypeCombo;	
 	
 	//catalog type (books, clothes, etc); set default to Books
-	String catalogGroup=DEFAULT_CATALOG;
+	String catalogGroup="";
 	
 	//constants
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 
     private final String NAME = "Name";
     private final String PRICE = "Unit Price";
@@ -166,9 +168,16 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 		
 		//combo box
 		catalogTypeCombo = new JComboBox();
-		catalogTypeCombo.addItem(DefaultData.BOOKS);
-		catalogTypeCombo.addItem(DefaultData.CLOTHES);
-		//catalogTypeCombo.addActionListener(new ComboBoxListener());
+		try {
+			IProductSubsystem productSubsystem = new ProductSubsystemFacade();
+			List<String[]> catalogNames = productSubsystem.getCatalogNames();
+			for(String []catalog:catalogNames){
+				catalogTypeCombo.addItem(catalog[0]);
+			}
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+			GuiUtil.showMessageDialog(this, "Unable to get Catalog Names");
+		}
 		Action comboAction = control.getComboAction(this);
 		comboAction.putValue(CustomerConstants.COMBO,this.getClass().getName() );
 		//catalogTypeCombo.addActionListener(control.getComboActionListener());
@@ -183,7 +192,6 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 		//add button
 		JButton addButton = new JButton(ADD_BUTN);
 		addButton.addActionListener(control.getAddProductListener(this));
-		
 		
 		//edit button
 		JButton editButton = new JButton(EDIT_BUTN);
@@ -216,6 +224,24 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 		
 	}
 	
+	/*class ComboBoxListener implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+			JComboBox catalogTypeCombo = (JComboBox) evt.getSource();
+			String catalogGroup = (String)catalogTypeCombo.getSelectedItem();
+			IProductSubsystem productSubsystem = new ProductSubsystemFacade();
+			List<String[]> productList;
+			try {
+				productList = ProductUtil.extractProductNames(productSubsystem.getProductList(catalogGroup));
+				updateModel(productList);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				GuiUtil.showMessageDialog(MaintainProductCatalog.this, "Unable To Get Product List");
+			}
+		
+		}
+	}*/
+	
 	public void updateModel(List<String[]> list){
 		//if(model==null){
 			model = new CustomTableModel();
@@ -233,8 +259,8 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getProductCatalogChoices(catalogGroup);
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getProductCatalogChoices(catalogGroup);*/
         }
 		updateModel(theData);
  	}	
@@ -259,14 +285,7 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 	
 	final String ERROR_MESSAGE = "Please select a row.";
 	final String ERROR = "Error";
-	/*
-	class ComboBoxListener implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
-			catalogGroup = (String)catalogTypeCombo.getSelectedItem();
-			updateModel();
-			updateTable();
-		}
-	}*/
+
 	
 	public static void main(String[] args) {
 		(new MaintainProductCatalog()).setVisible(true);

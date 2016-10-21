@@ -9,6 +9,12 @@ import business.externalinterfaces.ICreditCard;
 
 
 public class CustomerUtil {
+	public static int STREET_INT =0;
+ 	public static int CITY_INT = 1;
+ 	public static int STATE_INT = 2;
+ 	public static int ZIP_INT = 3;
+ 	public static final String[] CARD_TYPES = {"Visa", "MasterCard", "Discover"};
+ 	
     public static String[] creditCardToStringArray(ICreditCard cc){
         String[] retVal = new String[4];
         retVal[0] = cc.getNameOnCard();

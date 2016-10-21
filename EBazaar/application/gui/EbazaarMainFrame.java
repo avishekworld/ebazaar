@@ -291,7 +291,7 @@ public class EbazaarMainFrame extends javax.swing.JFrame implements ParentWindow
 	   menuItemMaintainCatalogTypes.addActionListener(prodControl.getMaintainCatalogTypesActionListener(this));
 	   menuItemMaintainCatalogTypes.setIcon(new ImageIcon("images/categories.png"));
 	   menuAdministrator.add( menuItemMaintainCatalogTypes);
-//	 maintain catalogue type menu item
+	   //maintain catalogue type menu item
 	   menuItemAbout = new JMenuItem(ABOUT);
 	  // menuItemMaintainCatalogTypes.addActionListener(prodControl.getMaintainCatalogTypesActionListener(this));
 	   menuItemAbout.setIcon(new ImageIcon("images/RESET.png"));

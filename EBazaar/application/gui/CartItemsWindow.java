@@ -195,9 +195,8 @@ public class CartItemsWindow extends JInternalFrame implements ParentWindow {
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-        	DefaultData data = DefaultData.getInstance();			        	
-			theData = data.getCartItemsData();
-			
+        	/*DefaultData data = DefaultData.getInstance();			        	
+			theData = data.getCartItemsData();*/
         }
 		updateModel(theData);
  

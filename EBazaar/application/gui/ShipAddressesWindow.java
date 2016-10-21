@@ -167,8 +167,8 @@ public class ShipAddressesWindow extends JInternalFrame implements ParentWindow 
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getShipAddresses();
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getShipAddresses();*/
         }
 		updateModel(theData);
  	}	

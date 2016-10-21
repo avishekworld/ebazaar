@@ -65,6 +65,7 @@ public class BrowseAndSelectController implements CleanupControl {
 				catalogListWindow.updateModel(productSubsystem.getCatalogNames());
 			}catch(Exception ex){
 				ex.printStackTrace();
+				GuiUtil.showMessageDialog(mainFrame, ex.getMessage());
 			}
 		
 			catalogListWindow.setVisible(true);
@@ -129,13 +130,12 @@ public class BrowseAndSelectController implements CleanupControl {
 				catalogListWindow.setVisible(false);
 				productListWindow  = new ProductListWindow(type);
 				mainFrame.getDesktop().add(productListWindow);
-				List<String[]> productList;
 				try {
-					productList = ProductUtil.extractProductNames(productSubsystem.getProductList(type));
+					List<String[]> productList = ProductUtil.extractProductNames(productSubsystem.getProductList(type));
 					productListWindow.updateModel(productList);
 				} catch (DatabaseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable To Get Product List");
 				}
 				productListWindow.setVisible(true);
 			}
@@ -159,12 +159,12 @@ public class BrowseAndSelectController implements CleanupControl {
 
 	// Control of ProductListWindow
 	class SelectProductListener implements ActionListener {
-		HashMap<String, String[]> readProductDetailsData() {
+		/*HashMap<String, String[]> readProductDetailsData() {
 			DefaultData productData = DefaultData.getInstance();
 			return productData.getProductDetailsData();
-		}
+		}*/
 
-		boolean useDefaultData;
+		boolean useDefaultData = false;
 
 		public SelectProductListener(boolean useDefData) {
 			useDefaultData = useDefData;
@@ -173,8 +173,8 @@ public class BrowseAndSelectController implements CleanupControl {
 		/* Returns, as a String array, the product details based on the type */
 		String[] readProductDetailsData(String productName) {
 			if (useDefaultData) {
-				DefaultData productData = DefaultData.getInstance();
-				return productData.getProductDetailsData(productName);
+				/*DefaultData productData = DefaultData.getInstance();
+				return productData.getProductDetailsData(productName);*/
 			} else{
 				try {
 					selectedProduct = productSubsystem.getProduct(productName);
@@ -308,6 +308,12 @@ public class BrowseAndSelectController implements CleanupControl {
 				catalogListWindow = new CatalogListWindow();				
 				EbazaarMainFrame.getInstance().getDesktop()
 						.add(catalogListWindow);
+				try {
+					catalogListWindow.updateModel(productSubsystem.getCatalogNames());
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+					GuiUtil.showMessageDialog(mainFrame, "Unable to get catalog types");
+				}
 				catalogListWindow.setVisible(true);
 			}
 		}

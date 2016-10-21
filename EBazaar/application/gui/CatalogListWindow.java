@@ -157,7 +157,7 @@ public class CatalogListWindow extends JInternalFrame implements ParentWindow {
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			theData = DefaultData.getCatalogTypes();
+			/*theData = DefaultData.getCatalogTypes();*/
         }
 		updateModel(theData);
  	}	

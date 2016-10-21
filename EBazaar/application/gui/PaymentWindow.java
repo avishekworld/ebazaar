@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import application.ApplicationCleanup;
 import application.CheckoutController;
 import application.GuiUtil;
+import business.util.CustomerUtil;
 
 /**
  * Class Description: This window provides textfields to enter
@@ -119,7 +120,7 @@ public class PaymentWindow extends JInternalFrame implements ParentWindow {
     }
 	/** loads the cardTypeField combo box */
 	private void loadCardTypeField() {
-		String[] types = DefaultData.CARD_TYPES;
+		String[] types = CustomerUtil.CARD_TYPES;
 		if(cardTypeField != null) {
 			for(int i = 0; i < types.length; ++i) {
 				cardTypeField.addItem(types[i]);

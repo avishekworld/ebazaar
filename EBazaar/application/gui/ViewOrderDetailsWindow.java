@@ -149,8 +149,8 @@ public class ViewOrderDetailsWindow extends JInternalFrame implements ParentWind
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
-			DefaultData dd = DefaultData.getInstance();
-			theData = dd.getViewOrderDetailsDefaultData();
+			/*DefaultData dd = DefaultData.getInstance();
+			theData = dd.getViewOrderDetailsDefaultData();*/
         }
 		updateModel(theData);
  	}		

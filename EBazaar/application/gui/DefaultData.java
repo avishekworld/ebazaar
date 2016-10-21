@@ -35,24 +35,24 @@ import java.util.*;
 public class DefaultData {
 	
 	
-	public static DefaultData instance;
+	/*public static DefaultData instance;
 	private DefaultData() {
 		//private constructor; must be accessed with getInstance method
-	}
+	}*/
 	
 	/**
 	 * This method provides the only avenue for obtaining an instance
 	 * of this singleton class.
 	 * @return DefaultData
 	 */
-	public static DefaultData getInstance() {
+	/*public static DefaultData getInstance() {
 		if(instance==null) {
 			instance = new DefaultData();
 		}
 		return instance;
-	}
+	}*/
 	
-	
+	/*
 	/////////////names
 	public final static String MESSIAH_OF_DUNE = "Messiah Of Dune";	
 	public final static String GONE_WITH_THE_WIND = "Gone With The Wind";
@@ -66,8 +66,8 @@ public class DefaultData {
     //field names for MaintainProductCatalog and AddEditProduct; enumerated constants used for accessing
     //fieldNames array dynamically
     public static final String[] FIELD_NAMES = {"Product Name","Price Per Unit","Mfg. Date","Quantity"};
+    
 	public static final int PRODUCT_NAME_INT = 0;
-	
 	public static final int PRICE_PER_UNIT_INT = 1;
 	public static final int MFG_DATE_INT = 2;
 	public static final int QUANTITY_INT = 3;
@@ -90,11 +90,11 @@ public class DefaultData {
     /////////////ProductListWindow default data
 
 	
-	/** each row of this 2D array represents a row in the books table */
+	*//** each row of this 2D array represents a row in the books table *//*
 	private final static String[][] DEFAULT_BOOKS = {{GONE_WITH_THE_WIND},
 		                                                {MESSIAH_OF_DUNE},
 		                                                {GARDEN_OF_RAMA }};
-	/** Each row of this 2D array represents a row in the clothes table */		                                                
+	*//** Each row of this 2D array represents a row in the clothes table *//*		                                                
 	private final static String[][] DEFAULT_CLOTHES = {{PANTS},
 		                                                {TSHIRTS},
 		                                                {SKIRTS}};		                                                
@@ -254,7 +254,7 @@ public class DefaultData {
     }
     
     /////////// Credit card types for payment window
-    public static final String[] CARD_TYPES = {"Visa", "MasterCard", "Discover"};
+    public static final String[] CARD_TYPES = {"Visa", "MasterCard", "Discover"};*/
     
     
 }

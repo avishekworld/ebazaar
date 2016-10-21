@@ -87,8 +87,12 @@ public class OrderUtil {
      */
     public static List<String[]> extractOrderData(List<IOrder> ordersList){
         //IMPLEMENT
-    	return new ArrayList<String[]>();
-        
+    	List<String[]> orderDataList = new ArrayList<String[]>();
+        for(IOrder order:ordersList){
+        	String []orderData = new String[]{ order.getOrderId() +"", order.getOrderDate(), order.getTotalPrice()};
+        	orderDataList.add(orderData);
+        }
+        return orderDataList;
     }
     
     public static double getShippingCost(List<ICartItem> items){
@@ -115,4 +119,13 @@ public class OrderUtil {
     	return 0.5;
     }
 
+    public static IOrder getSpecificOrderFromList(List<IOrder> allOrders, String orderNo){
+    	for(IOrder order:allOrders){
+    		if(order.getOrderId().equals(orderNo)){
+    			return order;
+    		}
+    	}
+    	
+    	return null;
+    }
 }

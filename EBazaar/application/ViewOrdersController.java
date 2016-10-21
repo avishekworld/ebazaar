@@ -9,6 +9,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
 import middleware.DatabaseException;
 
 import application.gui.CustomTableModel;
@@ -43,18 +45,24 @@ public class ViewOrdersController implements CleanupControl {
 				// String id = (String)table.getValueAt(selectedRow, 0);
 
 				selectOrderWindow.setVisible(false);
-				@SuppressWarnings("unused")
-				// String selOrderId = (String)model.getValueAt(selectedRow,0);
-				String selOrderId = "1";
-
+				viewOrderDetailsWindow = new ViewOrderDetailsWindow();
+				mainFrame.getDesktop().add(viewOrderDetailsWindow);
+				String selOrderId = (String)model.getValueAt(selectedRow,0);
+				//String selOrderId = "1";
 				// now get customer from SessionContext, getOrderHistory
 				// and then read the appropriate order from the history, using
 				// order id
-
-				// default implementation
-				selectOrderWindow.setVisible(false);
-				viewOrderDetailsWindow = new ViewOrderDetailsWindow();
-				mainFrame.getDesktop().add(viewOrderDetailsWindow);
+				ICustomerSubsystem customerSubsystem = (ICustomerSubsystem)SessionContext.getInstance().get(CustomerConstants.CUSTOMER);
+				List<IOrder> orderList = customerSubsystem.getOrderHistory();
+				IOrder order = OrderUtil.getSpecificOrderFromList(orderList, selOrderId);
+				try {
+					List<String[]> orderDetailsData = OrderUtil.makeItemsDisplayable(order.getOrderItems());
+					viewOrderDetailsWindow.updateModel(orderDetailsData);
+				} catch (DatabaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				viewOrderDetailsWindow.setVisible(true);
 			} else {
 				JOptionPane.showMessageDialog(selectOrderWindow, ERROR_MESSAGE,
@@ -119,7 +127,6 @@ public class ViewOrdersController implements CleanupControl {
 				customer = (ICustomerSubsystem)context.get(CustomerConstants.CUSTOMER);
 				orderList = customer.getOrderHistory();
 				List<String[]> displayableList = OrderUtil.extractOrderData(orderList);
-				
 				selectOrderWindow.updateModel(displayableList);
 				mainFrame.getDesktop().add(selectOrderWindow);
 				selectOrderWindow.setVisible(true);
