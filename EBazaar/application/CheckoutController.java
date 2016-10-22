@@ -168,13 +168,10 @@ public class CheckoutController implements CleanupControl {
 			fullname = cust.getCustomerProfile().getFirstName() + " "
 					+ cust.getCustomerProfile().getLastName();
 			if (shippingBillingWindow.isNewShipAddress()) {
-
 				String[] addrFlds = shippingBillingWindow
 						.getShipAddressFields();
-
 				IAddress addr = cust.createAddress(addrFlds[0], addrFlds[1],
 						addrFlds[2], addrFlds[3]);
-
 				try {
 					cleansedAddr = cust.runAddressRules(addr);
 					cust.saveNewAddress(cleansedAddr);
@@ -203,7 +200,6 @@ public class CheckoutController implements CleanupControl {
 
 				// load addresses into shopping cart
 				String[] s = shippingBillingWindow.getShipAddressFields();
-
 				String[] b = shippingBillingWindow.getBillAddressFields();
 				if (b[0].isEmpty() || b[1].isEmpty() || b[2].isEmpty()
 						|| b[3].isEmpty()) {
@@ -213,7 +209,6 @@ public class CheckoutController implements CleanupControl {
 				IAddress billAddr = cust.createAddress(b[0], b[1], b[2], b[3]);
 				cust.setBillingAddressInCart(billAddr);
 				cust.setShippingAddressInCart(shipAddr);
-
 				setupPaymentWindow();
 			}
 		}
@@ -317,6 +312,7 @@ public class CheckoutController implements CleanupControl {
 			if (rulesOk) {
 				paymentWindow.setVisible(false);
 				// create a credit card instance and set in shopping cart
+				custSystem.setPaymentInfoInCart(creditCard);
 				termsWindow = new TermsWindow();
 				try {
 					String termsText = extractTermsText();
@@ -358,16 +354,21 @@ public class CheckoutController implements CleanupControl {
 
 	// // control FinalOrderWindow
 	class SubmitFinalOrderListener implements ActionListener {
+		ICustomerSubsystem cust = (ICustomerSubsystem) SessionContext
+				.getInstance().get(CustomerConstants.CUSTOMER);
 		public void actionPerformed(ActionEvent evt) {
 			finalOrderWindow.setVisible(false);
-
 				try {
+					cust.submitOrder();
 					String msg = extractGoodbyeMessage();
-
 					JOptionPane.showMessageDialog(finalOrderWindow, msg,
 							"E-Bazaar: Thank You", JOptionPane.PLAIN_MESSAGE);
 				} catch(ParseException e) {
 					LOG.severe("Unable to extract goodbye message: " + e.getMessage());
+					GuiUtil.showMessageDialog(finalOrderWindow, "Unable to extract goodbye message");
+				}catch(DatabaseException e) {
+					LOG.severe("Unable to extract goodbye message: " + e.getMessage());
+					GuiUtil.showMessageDialog(finalOrderWindow, "Unable To Submit Order");
 				}
 			
 		}
