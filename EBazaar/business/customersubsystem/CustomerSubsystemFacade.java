@@ -158,6 +158,8 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	 */
 	public void submitOrder() throws DatabaseException {
 		//IMPLEMENT
+		orderSubsystem.submitOrder(shoppingCartSubsystem.getLiveCart());
+		shoppingCartSubsystem.clearLiveCart();
 	}
 
 	public void saveShoppingCart() throws DatabaseException {

@@ -161,54 +161,66 @@ public class CheckoutController implements CleanupControl {
 
 		public void actionPerformed(ActionEvent evt) {
 			boolean rulesOk = true;
-			IAddress cleansedAddr = null;
+			IAddress cleansedShipAddr = null;
+			IAddress cleansedBillAddr = null;
 			shippingBillingWindow.setVisible(false);
 			cust = (ICustomerSubsystem) SessionContext.getInstance().get(
 					CustomerConstants.CUSTOMER);
 			fullname = cust.getCustomerProfile().getFirstName() + " "
 					+ cust.getCustomerProfile().getLastName();
-			if (shippingBillingWindow.isNewShipAddress()) {
-				String[] addrFlds = shippingBillingWindow
-						.getShipAddressFields();
-				IAddress addr = cust.createAddress(addrFlds[0], addrFlds[1],
-						addrFlds[2], addrFlds[3]);
-				try {
-					cleansedAddr = cust.runAddressRules(addr);
-					cust.saveNewAddress(cleansedAddr);
-					shippingBillingWindow.setAddressFields(new String[] {
-							cleansedAddr.getStreet1(), cleansedAddr.getCity(),
-							cleansedAddr.getState(), cleansedAddr.getZip() });
-				} catch (RuleException e) {
-					rulesOk = false;
-					System.out.println(e.getMessage());
-					JOptionPane.showMessageDialog(shipAddressesWindow,
-							e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					shippingBillingWindow.setVisible(true);
-				} catch (EBazaarException e) {
-					rulesOk = false;
-					JOptionPane
-							.showMessageDialog(
-									shipAddressesWindow,
-									"An error has occurred that prevents further processing",
-									"Error", JOptionPane.ERROR_MESSAGE);
-					shippingBillingWindow.setVisible(true);
+			
+			String[] shipAddrFlds = shippingBillingWindow
+					.getShipAddressFields();
+			IAddress shipAdr = cust.createAddress(shipAddrFlds[0], shipAddrFlds[1],
+					shipAddrFlds[2], shipAddrFlds[3]);
+			
+			String[] billAddrFlds = shippingBillingWindow
+					.getBillAddressFields();
+			IAddress billAdr = cust.createAddress(billAddrFlds[0], billAddrFlds[1],
+					billAddrFlds[2], billAddrFlds[3]);
+			
+			try {
+				cleansedShipAddr = cust.runAddressRules(shipAdr);
+				if(!shippingBillingWindow.billingSameAsShipping()){
+					cleansedBillAddr = cust.runAddressRules(billAdr);
+					if(!billAdr.equals(cust.getDefaultBillingAddress())){
+						cust.saveNewAddress(cleansedBillAddr);
+					}
+					shippingBillingWindow.setBillAddressFields(new String[] {
+							cleansedBillAddr.getStreet1(), cleansedBillAddr.getCity(),
+							cleansedBillAddr.getState(), cleansedShipAddr.getZip() });
 				}
-
+				if (shippingBillingWindow.isNewShipAddress()) {
+					cust.saveNewAddress(cleansedShipAddr);
+				}
+				shippingBillingWindow.setShipAddressFields(new String[] {
+						cleansedShipAddr.getStreet1(), cleansedShipAddr.getCity(),
+						cleansedShipAddr.getState(), cleansedShipAddr.getZip() });
+			} catch (RuleException e) {
+				rulesOk = false;
+				System.out.println(e.getMessage());
+				JOptionPane.showMessageDialog(shipAddressesWindow,
+						e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				shippingBillingWindow.setVisible(true);
+			} catch (EBazaarException e) {
+				rulesOk = false;
+				JOptionPane
+						.showMessageDialog(
+								shipAddressesWindow,
+								"An error has occurred that prevents further processing",
+								"Error", JOptionPane.ERROR_MESSAGE);
+				shippingBillingWindow.setVisible(true);
 			}
 			// load into shopping cart and set up payment window
 			if (rulesOk) {
-
 				// load addresses into shopping cart
-				String[] s = shippingBillingWindow.getShipAddressFields();
-				String[] b = shippingBillingWindow.getBillAddressFields();
-				if (b[0].isEmpty() || b[1].isEmpty() || b[2].isEmpty()
-						|| b[3].isEmpty()) {
-					b = s;
+				cust.setShippingAddressInCart(cleansedShipAddr);
+				if(!shippingBillingWindow.billingSameAsShipping()){
+					cust.setBillingAddressInCart(cleansedBillAddr);
+				}else{
+					cust.setBillingAddressInCart(cleansedShipAddr);
 				}
-				IAddress shipAddr = cust.createAddress(s[0], s[1], s[2], s[3]);
-				IAddress billAddr = cust.createAddress(b[0], b[1], b[2], b[3]);
-				cust.setBillingAddressInCart(billAddr);
-				cust.setShippingAddressInCart(shipAddr);
+				
 				setupPaymentWindow();
 			}
 		}

@@ -13,6 +13,7 @@ import business.externalinterfaces.IOrder;
 import business.externalinterfaces.IOrderItem;
 import business.externalinterfaces.IOrderSubsystem;
 import business.externalinterfaces.IProductFromDb;
+import business.ordersubsystem.OrderItem;
 import business.ordersubsystem.OrderSubsystemFacade;
 import business.productsubsystem.ProductSubsystemFacade;
 
@@ -38,7 +39,8 @@ public class OrderUtil {
     }
     public static IOrderItem createOrderItemFromCartItem(ICartItem item, Integer orderId) {
         //IMPLEMENT
-        return null;        
+    	OrderItem orderItem = new OrderItem(item.getProductid(), orderId, item.getQuantity(), item.getTotalprice());
+        return orderItem;        
     }
     
     public static String computeTotalPrice(List<IOrderItem> orderItems){
@@ -107,12 +109,36 @@ public class OrderUtil {
     	return 2;
     }
     
+    public static double getShippingCostOfOrder(List<IOrderItem> items){
+    	double total = 0;
+    	for(IOrderItem item:items){
+    		total = total + getShippingCost(item);
+    	}
+    	return total;
+    }
+    
+    public static double getShippingCost(IOrderItem item){
+    	return 2;
+    }
+    
     public static double getTax(List<ICartItem> items){
     	double total = 0;
     	for(ICartItem item:items){
     		total = total + getTax(item);
     	}
     	return total;
+    }
+    
+    public static double getTaxOfOrder(List<IOrderItem> items){
+    	double total = 0;
+    	for(IOrderItem item:items){
+    		total = total + getTax(item);
+    	}
+    	return total;
+    }
+    
+    public static double getTax(IOrderItem item){
+    	return 0.5;
     }
     
     public static double getTax(ICartItem item){

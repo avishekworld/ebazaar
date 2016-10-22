@@ -176,12 +176,19 @@ public class ShippingBillingWindow extends JInternalFrame implements ParentWindo
     } 
         
     
-    public void setAddressFields(String[] data) {
-    	
+    public void setShipAddressFields(String[] data) {
     	shipAddressField.setText(data[0]);
     	shipCityField.setText(data[1]);
         shipStateField.setText(data[2]);
     	shipZipField.setText(data[3]);
+    	
+    }
+    
+    public void setBillAddressFields(String[] data) {
+    	billAddressField.setText(data[0]);
+    	billCityField.setText(data[1]);
+    	billStateField.setText(data[2]);
+    	billZipField.setText(data[3]);
     	
     }
 	public String[] getShipAddressHeaders() {

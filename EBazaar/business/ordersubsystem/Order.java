@@ -24,6 +24,7 @@ class Order implements IOrder{
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
+    
     public void setOrderItems(List<IOrderItem> orderItems){
     	this.orderItems = orderItems;
     }
@@ -49,6 +50,10 @@ class Order implements IOrder{
     public IAddress getBillAddress() {
         return billAddress;
     }
+    
+    public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
     /**
      * @param billAddress The billAddress to set.
      */

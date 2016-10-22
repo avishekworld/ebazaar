@@ -84,4 +84,14 @@ class Address implements IAddress{
         sb.append("Zip: "+zip+n);
         return sb.toString();
     }
+	@Override
+	public boolean equals(Object obj) {
+		Address address =(Address)obj;
+		return street1.equals(address.getStreet1()) &&
+				city.equals(address.getCity()) &&
+				state.equals(address.getState()) && 
+				zip.equals(address.getZip());
+	}
+    
+    
 }

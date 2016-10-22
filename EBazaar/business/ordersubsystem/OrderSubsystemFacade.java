@@ -1,8 +1,11 @@
 
 package business.ordersubsystem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,8 +70,28 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 
 	@Override
 	public void submitOrder(IShoppingCart shopCart) throws DatabaseException {
-		// TODO Auto-generated method stub
+		List<IOrderItem> orderItemList = new ArrayList<IOrderItem>();
+		for(ICartItem carItem:shopCart.getCartItems()){
+			IOrderItem orderItem = OrderUtil.createOrderItemFromCartItem(carItem, null);
+			orderItemList.add(orderItem);
+		}
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		String orderDate = df.format(new Date());
+		String totalPrice = OrderUtil.computeTotalPrice(orderItemList);
+		Order order = new Order(null, orderDate, totalPrice);
+		order.setShipAddress(shopCart.getShippingAddress());
+		order.setBillAddress(shopCart.getBillingAddress());
+		order.setCreditCard(shopCart.getPaymentInfo());
+		order.setOrderItems(orderItemList);
 		
+		DbClassOrder dbClass = new DbClassOrder();
+		Integer orderId = dbClass.submitOrder(order, custProfile);
+		order.setOrderId(orderId);
+		for(IOrderItem orderItem:order.getOrderItems()){
+			orderItem.setOrderid(orderId);
+			dbClass = new DbClassOrder();
+			dbClass.submitOrderItem(orderItem, orderId);
+		}
 	}
 
 

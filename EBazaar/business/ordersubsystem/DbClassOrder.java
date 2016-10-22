@@ -21,6 +21,7 @@ import business.externalinterfaces.IOrder;
 import business.externalinterfaces.IOrderItem;
 import business.externalinterfaces.IShoppingCart;
 import business.util.OrderUtil;
+import business.util.ShoppingCartUtil;
 import middleware.DatabaseException;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
@@ -36,11 +37,15 @@ class DbClassOrder implements IDbClass {
     	new DataAccessSubsystemFacade();
 	private String query;
     private String queryType;
+    private final String SAVE_ORDER = "SaveOrder";
+    private final String SAVE_ORDER_ITEM = "SaveOrderItem";
     private final String GET_ORDER_ITEMS = "GetOrderItems";
     private final String GET_ORDER_IDS = "GetOrderIds";
     private final String GET_ORDER_DATA = "GetOrderData";
     private ICustomerProfile customerProfile;
+    private IOrder order;
     private String orderId;
+    private IOrderItem orderItem;
     private List<String> orderIds;
     private List<IOrderItem> orderItems;
     private Order orderData;    
@@ -55,6 +60,12 @@ class DbClassOrder implements IDbClass {
         else if(queryType.equals(GET_ORDER_DATA)){
         	buildGetOrderDataQuery();
         }
+        else if(queryType.equals(SAVE_ORDER)){
+        	buildSaveOrderQuery();
+        }
+        else if(queryType.equals(SAVE_ORDER_ITEM)){
+        	buildSaveOrderItemQuery();
+        }
     }
     private void buildGetOrderDataQuery() {
         query = "SELECT orderdate, totalpriceamount FROM Ord WHERE orderid = '"+orderId+"'";
@@ -64,6 +75,46 @@ class DbClassOrder implements IDbClass {
     }
     private void buildGetOrderItemsQuery() {
         query = "SELECT * FROM OrderItem WHERE orderid = '"+orderId+"'";
+    }
+    private void buildSaveOrderQuery() {
+    	double orderCost = Double.parseDouble(order.getTotalPrice());
+    	double shippingCost = OrderUtil.getShippingCostOfOrder(order.getOrderItems());
+    	double tax = OrderUtil.getTaxOfOrder(order.getOrderItems());
+    	double total = orderCost + shippingCost + tax;
+    	query = "insert into ord values (null," + customerProfile.getCustId() + 
+    			",'" + order.getShipAddress().getStreet1()+ "'" +
+    			",'" + order.getShipAddress().getStreet2()+ "'" +
+    			",'" + order.getShipAddress().getCity()+ "'" +
+    			",'" + order.getShipAddress().getState()+ "'" +
+    			",'" + order.getShipAddress().getZip()+ "'" +
+    			",'" + order.getBillAddress().getStreet1()+ "'" +
+    			",'" + order.getBillAddress().getStreet2()+ "'" +
+    			",'" + order.getBillAddress().getCity()+ "'" +
+    			",'" + order.getBillAddress().getState()+ "'" +
+    			",'" + order.getBillAddress().getZip()+ "'" +
+    			",'" + order.getPaymentInfo().getNameOnCard()+ "'" +
+    			",'" + order.getPaymentInfo().getExpirationDate()+ "'" +
+    			",'" + order.getPaymentInfo().getCardType()+ "'" +
+    			",'" + order.getPaymentInfo().getCardNum()+ "'" +
+    			",'" + order.getOrderDate()+ "'" +
+    			",'" + null+ "'" +
+    			",'" + null+ "'" +
+    			",'" + "pending"+ "'" +
+    			"," + orderCost +
+    			"," + shippingCost +
+    			"," + tax +
+    			"," + total + ")";
+    }
+    private void buildSaveOrderItemQuery() {
+    	double shippingCost = OrderUtil.getShippingCost(orderItem);
+    	double tax = OrderUtil.getTax(orderItem);
+        query = "insert into orderitem values (null," + orderId +
+        		"," + orderItem.getProductid() +
+        		"," + orderItem.getQuantity() +
+    			"," + orderItem.getTotalPrice() +
+    			"," + shippingCost +
+    			"," + tax + ")";
+        
     }
     
     public List<String> getAllOrderIds(ICustomerProfile customerProfile) throws DatabaseException {
@@ -93,6 +144,23 @@ class DbClassOrder implements IDbClass {
     	dataAccessSS.createConnection(this);
 		dataAccessSS.read();
         return orderItems;
+    }
+    
+    public Integer submitOrder(IOrder order, ICustomerProfile customerProfile) throws DatabaseException{
+    	this.customerProfile = customerProfile;
+    	this.order = order;
+    	queryType = SAVE_ORDER;
+    	dataAccessSS.createConnection(this);
+    	Integer orderId = dataAccessSS.saveWithinTransaction(this);
+    	return orderId;
+    }
+    
+    public void submitOrderItem(IOrderItem orderItem, Integer orderId) throws DatabaseException{
+    	this.orderItem = orderItem;
+    	this.orderId = orderId + "";
+    	queryType = SAVE_ORDER_ITEM;
+    	dataAccessSS.createConnection(this);
+    	dataAccessSS.saveWithinTransaction(this);
     }
     
     public void populateEntity(ResultSet resultSet) throws DatabaseException {
