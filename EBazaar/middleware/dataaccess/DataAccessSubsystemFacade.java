@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import middleware.DatabaseException;
+import middleware.DbConfigProperties;
 import middleware.externalinterfaces.Cleanup;
+import middleware.externalinterfaces.DbConfigKey;
 import middleware.externalinterfaces.IDataAccessSubsystem;
 import middleware.externalinterfaces.IDataAccessTest;
 import middleware.externalinterfaces.IDbClass;
@@ -194,7 +196,10 @@ public class DataAccessSubsystemFacade implements IDataAccessSubsystem, IDataAcc
     	if(queries.length != dburls.length) return null;
     	int numConnections = queries.length;
     	ResultSet[] results = new ResultSet[numConnections];
-    	SimpleConnectionPool pool = SimpleConnectionPool.getInstance(numConnections);
+    	DbConfigProperties props = new DbConfigProperties();
+    	String user = props.getProperty(DbConfigKey.DB_USER.getVal());
+		String pass = props.getProperty(DbConfigKey.DB_PASSWORD.getVal());
+    	SimpleConnectionPool pool = SimpleConnectionPool.getInstance(user, pass, "", numConnections);
         ArrayList<Connection> cons = new ArrayList<Connection>();
         for(int i = 0; i < numConnections; ++i) {
         	cons.add(pool.getConnection(dburls[i]));

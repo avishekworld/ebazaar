@@ -9,17 +9,13 @@ import java.util.logging.Logger;
 public class DbConfigProperties {
 	private static final String PROPERTIES = "resources/dbconfig.properties";
 	private static final Logger LOG = Logger.getLogger("");
-	private static final String PROPS = 
+	public static final String PROPS = 
 		System.getProperty("user.dir") + "/" + PROPERTIES;
 	private static Properties props;
 	
-	public DbConfigProperties(){
+	static {
 		readProps();
 	}
-	
-	/*static {
-		readProps();
-	}*/
 	
 	public String getProperty(String key) {
 		System.out.println(props);

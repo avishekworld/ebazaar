@@ -204,7 +204,7 @@ class SimpleConnectionPool {
 
 		} catch (SQLException e) {
 			log.warning("Unable to create a connection to database with dburl "
-					+ URI);
+					+ URI + e);
 			throw new DatabaseException("Database is unavailable.");
 		}
 		return con;
