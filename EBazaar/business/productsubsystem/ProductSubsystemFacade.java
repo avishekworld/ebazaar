@@ -92,7 +92,7 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	@Override
 	public List<IProductFromDb> refreshProductList(String catType) throws DatabaseException {
 		DbClassProduct dbClass = new DbClassProduct();
-		List<IProductFromDb> productList = dbClass.refreshProductList(Integer.parseInt(catType));
+		List<IProductFromDb> productList = dbClass.refreshProductList(getCatalogIdFromType(catType));
 		return productList;
 	}
 	@Override

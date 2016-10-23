@@ -106,8 +106,8 @@ public class BrowseAndSelectController implements CleanupControl {
 		public void actionPerformed(ActionEvent e) {
 			boolean loggedIn = (Boolean) context
 					.get(CustomerConstants.LOGGED_IN);
+			cartItemsWindow = new  CartItemsWindow();
 			if (!loggedIn) {
-				cartItemsWindow = new  CartItemsWindow();
 				LoginControl loginControl = new LoginControl(
 						cartItemsWindow, mainFrame, this);
 
