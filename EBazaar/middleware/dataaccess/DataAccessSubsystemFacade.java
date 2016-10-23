@@ -210,5 +210,30 @@ public class DataAccessSubsystemFacade implements IDataAccessSubsystem, IDataAcc
         return results;   	
     	
     }
+    
+    //Testing interface
+    public ResultSet runTestQuery(String query, String dbulr) throws DatabaseException{
+    	if(query == null || dbulr == null) return null;
+    	ResultSet result;;
+    	DbConfigProperties props = new DbConfigProperties();
+    	String user = props.getProperty(DbConfigKey.DB_USER.getVal());
+		String pass = props.getProperty(DbConfigKey.DB_PASSWORD.getVal());
+    	SimpleConnectionPool pool = SimpleConnectionPool.getInstance(user, pass, "", 1);
+    	result = DataAccessUtil.runQuery(pool, dbulr, query);
+        ArrayList<Connection> cons = new ArrayList<Connection>();
+        return result; 
+    }
+    
+  //Testing interface
+    public Integer runTestUpdate(String query, String dbulr) throws DatabaseException{
+    	if(query == null || dbulr == null) return null;
+    	DbConfigProperties props = new DbConfigProperties();
+    	String user = props.getProperty(DbConfigKey.DB_USER.getVal());
+		String pass = props.getProperty(DbConfigKey.DB_PASSWORD.getVal());
+    	SimpleConnectionPool pool = SimpleConnectionPool.getInstance(user, pass, "", 1);
+    	Integer key = DataAccessUtil.runUpdate(pool, dbulr, query);
+        ArrayList<Connection> cons = new ArrayList<Connection>();
+        return key; 
+    }
 
 }
